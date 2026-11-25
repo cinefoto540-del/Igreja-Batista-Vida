@@ -14,6 +14,7 @@
       --muted: #64748b;
       --border: #cbd5e1;
       --success: #16a34a;
+      --visitor: #7c3aed;
       --warning: #d97706;
       --danger: #dc2626;
     }
@@ -74,22 +75,23 @@
       font-weight: 600;
     }
 
-    .container { max-width: 1240px; margin: 24px auto; padding: 0 16px; }
+    .container { max-width: 1260px; margin: 24px auto; padding: 0 16px; }
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
       margin-bottom: 24px;
     }
     .stat-card {
       background: var(--card);
-      padding: 18px;
+      padding: 16px 12px;
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    .stat-card span { font-size: 0.88rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 600; }
-    .stat-card strong { font-size: 1.9rem; color: var(--primary); }
+    .stat-card span { font-size: 0.84rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 600; }
+    .stat-card strong { font-size: 1.85rem; color: var(--primary); }
+    .stat-card.visitor strong { color: var(--visitor); }
     .stat-card.green strong { color: var(--success); }
     .stat-card.orange strong { color: var(--warning); }
 
@@ -137,7 +139,7 @@
     button:hover { opacity: 0.93; }
     button.cancel-btn { background: #64748b; margin-top: 6px; }
 
-    .list { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+    .list { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; max-height: 430px; overflow-y: auto; }
     .list-item {
       border: 1px solid #e2e8f0;
       background: #f8fafc;
@@ -148,9 +150,21 @@
       align-items: center;
       gap: 10px;
     }
-    .list-item-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+    .list-item-info h4 { font-size: 0.95rem; margin-bottom: 3px; }
     .list-item-info p { font-size: 0.82rem; color: var(--muted); }
-    .actions { display: flex; gap: 6px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+    .badge {
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge.membro { background: #dbeafe; color: #1e40af; }
+    .badge.visitante { background: #ede9fe; color: #5b21b6; }
+    .badge.celula { background: #dcfce7; color: #166534; }
+    .badge.sem-celula { background: #fef3c7; color: #92400e; }
+
+    .actions { display: flex; gap: 6px; flex-shrink: 0; }
     .actions button { width: auto; padding: 6px 10px; font-size: 0.8rem; }
     .btn-edit { background: var(--warning); }
     .btn-del { background: var(--danger); }
@@ -178,7 +192,7 @@
     <header>
       <a href="index.html" class="back-btn">← Voltar para Painel Principal</a>
       <h1>Área Administrador</h1>
-      <p>Gestão de Eventos, Membros e Células</p>
+      <p>Gestão de Eventos, Membros, Visitantes e Células</p>
       <div class="status-pill">
         <span class="dot" id="statusDot"></span>
         <span id="statusText">Conectando à nuvem...</span>
@@ -187,9 +201,11 @@
 
     <div class="container">
       <div class="stats-grid">
-        <div class="stat-card"><span>Total de Membros</span><strong id="totalMembros">0</strong></div>
+        <div class="stat-card"><span>Total Cadastrados</span><strong id="totalGeral">0</strong></div>
+        <div class="stat-card"><span>Membros</span><strong id="totalMembros">0</strong></div>
+        <div class="stat-card visitor"><span>Visitantes</span><strong id="totalVisitantes">0</strong></div>
         <div class="stat-card green"><span>Em Células</span><strong id="emCelulas">0</strong></div>
-        <div class="stat-card orange"><span>Fora das Células</span><strong id="foraCelulas">0</strong></div>
+        <div class="stat-card orange"><span>Sem Célula</span><strong id="foraCelulas">0</strong></div>
         <div class="stat-card"><span>Total de Células</span><strong id="totalCelulas">0</strong></div>
       </div>
 
@@ -219,12 +235,25 @@
           <div class="list" id="listaEventos"></div>
         </div>
 
-        <!-- MEMBROS -->
+        <!-- MEMBROS E VISITANTES -->
         <div class="card">
-          <h2>Membros</h2>
+          <h2>Membros e Visitantes</h2>
           <form id="formMembro">
             <input type="hidden" id="membroEditId" />
-            <label>Nome do Membro *</label>
+            <div class="row-2">
+              <div>
+                <label>Tipo *</label>
+                <select id="memTipo">
+                  <option value="Membro">Membro</option>
+                  <option value="Visitante">Visitante</option>
+                </select>
+              </div>
+              <div>
+                <label>Idade</label>
+                <input type="number" id="memIdade" placeholder="Ex: 30" min="1" max="120" />
+              </div>
+            </div>
+            <label>Nome Completo *</label>
             <input type="text" id="memNome" placeholder="Nome completo" required />
             <label>Telefone / WhatsApp</label>
             <input type="text" id="memTel" placeholder="(00) 90000-0000" maxlength="15" />
@@ -232,7 +261,7 @@
             <select id="memCelula">
               <option value="Fora de célula">Fora de célula</option>
             </select>
-            <button type="submit" id="btnSalvarMembro">Adicionar Membro</button>
+            <button type="submit" id="btnSalvarMembro">Adicionar Cadastro</button>
             <button type="button" class="cancel-btn" id="btnCancelarMembro" style="display:none;">Cancelar Edição</button>
           </form>
 
@@ -242,9 +271,9 @@
               <input type="text" id="filtroNome" placeholder="Filtrar nome..." />
             </div>
             <div>
-              <label>Filtrar por célula</label>
+              <label>Filtrar por grupo</label>
               <select id="filtroCelula">
-                <option value="Todas">Todas</option>
+                <option value="Todas">Todos</option>
               </select>
             </div>
           </div>
@@ -339,24 +368,34 @@
       const listaC = Object.entries(celulas);
       const listaE = Object.entries(eventos);
 
+      const totalMembrosCount = listaM.filter(([, m]) => (m.tipo || "Membro") === "Membro").length;
+      const totalVisitantesCount = listaM.filter(([, m]) => m.tipo === "Visitante").length;
       const emCelulaCount = listaM.filter(([, m]) => m.celula && m.celula !== "Fora de célula").length;
-      document.getElementById("totalMembros").textContent = listaM.length;
+
+      document.getElementById("totalGeral").textContent = listaM.length;
+      document.getElementById("totalMembros").textContent = totalMembrosCount;
+      document.getElementById("totalVisitantes").textContent = totalVisitantesCount;
       document.getElementById("emCelulas").textContent = emCelulaCount;
       document.getElementById("foraCelulas").textContent = listaM.length - emCelulaCount;
       document.getElementById("totalCelulas").textContent = listaC.length;
 
-      // Atualiza selects de células
+      // Atualiza selects de células e filtros
       const selCel = document.getElementById("memCelula");
       const filCel = document.getElementById("filtroCelula");
       const valAtual = selCel.value;
       const filAtual = filCel.value;
 
       selCel.innerHTML = '<option value="Fora de célula">Fora de célula</option>';
-      filCel.innerHTML = '<option value="Todas">Todas</option><option value="Fora de célula">Fora de célula</option>';
+      filCel.innerHTML = `
+        <option value="Todas">Todos</option>
+        <option value="TIPO_MEMBRO">Somente Membros</option>
+        <option value="TIPO_VISITANTE">Somente Visitantes</option>
+        <option value="Fora de célula">Sem célula</option>
+      `;
 
       listaC.forEach(([, c]) => {
         selCel.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
-        filCel.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
+        filCel.innerHTML += `<option value="${c.nome}">Célula: ${c.nome}</option>`;
       });
       selCel.value = valAtual || "Fora de célula";
       filCel.value = filAtual || "Todas";
@@ -378,18 +417,21 @@
 
       // Render Células
       const elCel = document.getElementById("listaCelulas");
-      elCel.innerHTML = listaC.length ? listaC.map(([id, c]) => `
-        <div class="list-item">
-          <div class="list-item-info">
-            <h4>${c.nome}</h4>
-            <p>Líder: ${c.lider || "Não informado"}</p>
+      elCel.innerHTML = listaC.length ? listaC.map(([id, c]) => {
+        const qtd = listaM.filter(([, m]) => m.celula === c.nome).length;
+        return `
+          <div class="list-item">
+            <div class="list-item-info">
+              <h4>${c.nome} (${qtd})</h4>
+              <p>Líder: ${c.lider || "Não informado"}</p>
+            </div>
+            <div class="actions">
+              <button type="button" class="btn-edit" onclick="editarCelula('${id}')">Editar</button>
+              <button type="button" class="btn-del" onclick="excluirItem('celulas','${id}')">X</button>
+            </div>
           </div>
-          <div class="actions">
-            <button type="button" class="btn-edit" onclick="editarCelula('${id}')">Editar</button>
-            <button type="button" class="btn-del" onclick="excluirItem('celulas','${id}')">X</button>
-          </div>
-        </div>
-      `).join("") : '<p class="empty">Nenhuma célula cadastrada.</p>';
+        `;
+      }).join("") : '<p class="empty">Nenhuma célula cadastrada.</p>';
 
       renderMembros();
     }
@@ -398,23 +440,35 @@
       const fNome = document.getElementById("filtroNome").value.toLowerCase();
       const fCel = document.getElementById("filtroCelula").value;
       const filtrados = Object.entries(membros).filter(([, m]) => {
+        const tipoPessoa = m.tipo || "Membro";
         const matchNome = m.nome.toLowerCase().includes(fNome);
-        const matchCel = fCel === "Todas" || (m.celula || "Fora de célula") === fCel;
-        return matchNome && matchCel;
+        if (!matchNome) return false;
+        if (fCel === "TIPO_MEMBRO") return tipoPessoa === "Membro";
+        if (fCel === "TIPO_VISITANTE") return tipoPessoa === "Visitante";
+        return fCel === "Todas" || (m.celula || "Fora de célula") === fCel;
       });
+
       const elMem = document.getElementById("listaMembros");
-      elMem.innerHTML = filtrados.length ? filtrados.map(([id, m]) => `
-        <div class="list-item">
-          <div class="list-item-info">
-            <h4>${m.nome}</h4>
-            <p>${m.telefone || "Sem telefone"} • ${m.celula || "Fora de célula"}</p>
+      elMem.innerHTML = filtrados.length ? [...filtrados].reverse().map(([id, m]) => {
+        const tipoPessoa = m.tipo || "Membro";
+        const semCel = !m.celula || m.celula === "Fora de célula";
+        return `
+          <div class="list-item">
+            <div class="list-item-info">
+              <h4>${m.nome} ${m.idade ? `(${m.idade} anos)` : ""}</h4>
+              <p>${m.telefone || "Sem telefone"}</p>
+              <div class="badges">
+                <span class="badge ${tipoPessoa === "Visitante" ? "visitante" : "membro"}">${tipoPessoa}</span>
+                <span class="badge ${semCel ? "sem-celula" : "celula"}">${semCel ? "Sem célula" : m.celula}</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="btn-edit" onclick="editarMembro('${id}')">Editar</button>
+              <button type="button" class="btn-del" onclick="excluirItem('membros','${id}')">X</button>
+            </div>
           </div>
-          <div class="actions">
-            <button type="button" class="btn-edit" onclick="editarMembro('${id}')">Editar</button>
-            <button type="button" class="btn-del" onclick="excluirItem('membros','${id}')">X</button>
-          </div>
-        </div>
-      `).join("") : '<p class="empty">Nenhum membro encontrado.</p>';
+        `;
+      }).join("") : '<p class="empty">Nenhum cadastro encontrado.</p>';
     }
 
     document.getElementById("filtroNome").addEventListener("input", renderMembros);
@@ -443,11 +497,15 @@
     }
     document.getElementById("btnCancelarEvento").addEventListener("click", resetEvento);
 
-    // Salvar Membro
+    // Salvar Membro / Visitante
     document.getElementById("formMembro").addEventListener("submit", async (e) => {
       e.preventDefault();
       const editId = document.getElementById("membroEditId").value;
+      const existente = editId ? membros[editId] : {};
       const dados = {
+        ...existente,
+        tipo: document.getElementById("memTipo").value,
+        idade: document.getElementById("memIdade").value.trim(),
         nome: document.getElementById("memNome").value.trim(),
         telefone: document.getElementById("memTel").value.trim(),
         celula: document.getElementById("memCelula").value
@@ -459,8 +517,9 @@
 
     function resetMembro() {
       document.getElementById("formMembro").reset();
+      document.getElementById("memTipo").value = "Membro";
       document.getElementById("membroEditId").value = "";
-      document.getElementById("btnSalvarMembro").textContent = "Adicionar Membro";
+      document.getElementById("btnSalvarMembro").textContent = "Adicionar Cadastro";
       document.getElementById("btnCancelarMembro").style.display = "none";
     }
     document.getElementById("btnCancelarMembro").addEventListener("click", resetMembro);
@@ -501,6 +560,8 @@
     window.editarMembro = (id) => {
       const m = membros[id];
       document.getElementById("membroEditId").value = id;
+      document.getElementById("memTipo").value = m.tipo || "Membro";
+      document.getElementById("memIdade").value = m.idade || "";
       document.getElementById("memNome").value = m.nome;
       document.getElementById("memTel").value = m.telefone || "";
       document.getElementById("memCelula").value = m.celula || "Fora de célula";
