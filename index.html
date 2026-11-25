@@ -1,257 +1,287 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Igreja Batista Vida | Painel Principal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-  * { box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; padding: 0; color: #333; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Igreja Batista Vida | Painel Principal</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --warning: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 1.8rem; margin-bottom: 6px; }
+    header p { opacity: 0.9; font-size: 0.95rem; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+    .dot.offline { background: #facc15; }
+    .admin-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--success);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .admin-btn:hover { opacity: 0.92; }
+    .container { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+    .stat-card span { font-size: 0.9rem; color: var(--muted); display: block; margin-bottom: 8px; font-weight: 600; }
+    .stat-card strong { font-size: 2rem; color: var(--primary); }
+    .stat-card.green strong { color: var(--success); }
+    .stat-card.orange strong { color: var(--warning); }
 
-  header { background: #1e3a8a; color: white; text-align: center; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); position: relative; }
-  header h1 { margin: 0; }
-  header p { margin: 6px 0 0; opacity: 0.9; font-size: 14px; }
-  .container { max-width: 1140px; margin: 24px auto; padding: 0 18px; }
+    .main-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .panel {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+    .panel h2 {
+      font-size: 1.15rem;
+      color: var(--primary);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    .search-box {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+    }
+    .item-list { display: flex; flex-direction: column; gap: 10px; max-height: 450px; overflow-y: auto; }
+    .item-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+    .item-card h3 { font-size: 1rem; color: var(--text); margin-bottom: 4px; }
+    .item-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 6px;
+      background: #dbeafe;
+      color: var(--primary);
+    }
+    .badge.none { background: #fef3c7; color: #92400e; }
+    .empty { text-align: center; color: var(--muted); font-size: 0.9rem; padding: 24px 0; }
 
-  .btn-admin-link { position: absolute; top: 20px; right: 20px; background: #10b981; color: white; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; transition: 0.2s; }
-  .btn-admin-link:hover { background: #059669; }
-
-  .painel { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; margin-bottom: 24px; }
-  .caixa-num { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.08); font-size: 14px; font-weight: 500; }
-  .caixa-num span { display: block; font-size: 32px; font-weight: 700; color: #1e3a8a; margin-top: 8px; }
-
-  .atividade-card { margin-bottom: 24px; }
-  .atividade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-  .atividade-grid p { margin: 0; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; }
-
-  .colunas { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; align-items: start; }
-  .card { background: white; padding: 22px; border-radius: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); }
-
-  h2 { margin-top: 0; color: #1e3a8a; font-size: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
-  .filtros-membros { display: grid; grid-template-columns: 1fr 140px; gap: 8px; margin-bottom: 14px; }
-  input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; }
-  input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
-
-  ul { list-style: none; padding: 0; margin: 0; }
-  li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-  li:last-child { border-bottom: none; }
-
-  .celula-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 10px; margin-bottom: 12px; }
-  .celula-item ul { margin-top: 8px; padding-left: 18px; list-style: disc; color: #4b5563; }
-  .celula-item li { display: list-item; padding: 3px 0; border-bottom: none; font-size: 14px; }
-
-  .btn-wpp { background: #dcfce7; color: #15803d; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px; border-radius: 6px; font-size: 14px; flex-shrink: 0; }
-  .btn-wpp:hover { background: #bbf7d0; }
-
-  .tag { display: inline-block; font-size: 12px; background: #dbeafe; color: #1e40af; padding: 2px 7px; border-radius: 5px; font-weight: 500; margin-left: 4px; }
-  .tag-fora { background: #fef3c7; color: #92400e; }
-  .vazio { color: #9ca3af; font-size: 14px; text-align: center; padding: 15px 0; }
-
-  @media (max-width: 600px) {
-    .btn-admin-link { position: static; display: inline-block; margin-bottom: 14px; }
-    .filtros-membros { grid-template-columns: 1fr; }
-  }
-</style>
+    @media (max-width: 640px) {
+      .admin-btn { position: static; display: inline-block; margin-top: 12px; }
+    }
+  </style>
 </head>
 <body>
-
-<header>
-  <a href="./admin.html" class="btn-admin-link"><i class="fa-solid fa-lock"></i> Área Admin</a>
-  <h1><i class="fa-solid fa-church"></i> Igreja Batista Vida</h1>
-  <p>Painel de Visualização</p>
-</header>
-
-<div class="container">
-  <div class="painel">
-    <div class="caixa-num">👥 Total de Membros <span id="n-total">0</span></div>
-    <div class="caixa-num">✅ Em Células <span id="n-com">0</span></div>
-    <div class="caixa-num">⚠️ Fora das Células <span id="n-sem" style="color:#d97706">0</span></div>
-    <div class="caixa-num">🤝 Total de Células <span id="n-cel" style="color:#059669">0</span></div>
-  </div>
-
-  <div class="card atividade-card">
-    <h2><i class="fa-solid fa-chart-line"></i> Atividade da Igreja</h2>
-    <div class="atividade-grid">
-      <p>📅 Próximos Eventos: <strong id="qtdEventos">0</strong></p>
-      <p>👥 Em células: <strong id="percCelula">0</strong>% dos membros</p>
-      <p>⚠️ Sem célula: <strong id="percSemCelula">0</strong>% dos membros</p>
-      <p>🤝 Células ativas: <strong id="qtdCelulas">0</strong></p>
+  <header>
+    <h1>Igreja Batista Vida</h1>
+    <p>Acompanhamento de Eventos, Membros e Células</p>
+    <div class="status-pill">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">Conectando à nuvem...</span>
     </div>
-  </div>
+    <a href="admin.html" class="admin-btn">Área Admin</a>
+  </header>
 
-  <div class="colunas">
-    <div class="card">
-      <h2><i class="fa-solid fa-calendar"></i> Eventos</h2>
-      <ul id="lista-ev"></ul>
-    </div>
-
-    <div class="card">
-      <h2><i class="fa-solid fa-users"></i> Membros</h2>
-      <div class="filtros-membros">
-        <input type="text" id="buscaMembro" placeholder="🔍 Buscar membro...">
-        <select id="filtroCelula">
-          <option value="TODAS">Todas</option>
-          <option value="SEM">Sem célula</option>
-        </select>
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span>Total de Membros</span>
+        <strong id="totalMembros">0</strong>
       </div>
-      <ul id="lista-mb"></ul>
+      <div class="stat-card green">
+        <span>Em Células</span>
+        <strong id="emCelulas">0</strong>
+      </div>
+      <div class="stat-card orange">
+        <span>Fora das Células</span>
+        <strong id="foraCelulas">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Total de Células</span>
+        <strong id="totalCelulas">0</strong>
+      </div>
     </div>
 
-    <div class="card">
-      <h2><i class="fa-solid fa-handshake"></i> Células</h2>
-      <div id="lista-cel"></div>
+    <div class="main-grid">
+      <div class="panel">
+        <h2>Próximos Eventos</h2>
+        <div id="listaEventos" class="item-list"><p class="empty">Carregando...</p></div>
+      </div>
+
+      <div class="panel">
+        <h2>Membros</h2>
+        <input type="text" id="buscaMembro" class="search-box" placeholder="Buscar membro por nome ou célula..." />
+        <div id="listaMembros" class="item-list"><p class="empty">Carregando...</p></div>
+      </div>
+
+      <div class="panel">
+        <h2>Células Ativas</h2>
+        <div id="listaCelulas" class="item-list"><p class="empty">Carregando...</p></div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  const db = { eventos: [], membros: [], celulas: [] };
-  try {
-    const salvo = localStorage.getItem('ibv_db');
-    if (salvo) {
-      const parsed = JSON.parse(salvo);
-      if (Array.isArray(parsed.eventos)) db.eventos = parsed.eventos;
-      if (Array.isArray(parsed.membros)) db.membros = parsed.membros;
-      if (Array.isArray(parsed.celulas)) db.celulas = parsed.celulas;
-    }
-  } catch (e) {}
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  function escaparTexto(texto) {
-    if (!texto) return '';
-    return String(texto).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+    const FIREBASE_DB_URL = "https://igreja-batista-vida-b184c-default-rtdb.firebaseio.com";
 
-  function membroTemCelula(m) {
-    return Boolean(m.celulaId && db.celulas.some(c => String(c.id) === String(m.celulaId)));
-  }
+    const app = initializeApp({ databaseURL: FIREBASE_DB_URL });
+    const db = getDatabase(app);
 
-  function render() {
-    renderPainelNumeros();
-    renderAtividadeIgreja();
-    renderSelectFiltroCelula();
-    renderListaEventos();
-    renderListaMembros();
-    renderListaCelulas();
-  }
+    let eventos = [];
+    let membros = [];
+    let celulas = [];
 
-  function renderPainelNumeros() {
-    const total = db.membros.length;
-    const com = db.membros.filter(membroTemCelula).length;
-    document.getElementById('n-total').innerText = total;
-    document.getElementById('n-com').innerText = com;
-    document.getElementById('n-sem').innerText = total - com;
-    document.getElementById('n-cel').innerText = db.celulas.length;
-  }
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
 
-  function renderAtividadeIgreja() {
-    const total = db.membros.length;
-    const com = db.membros.filter(membroTemCelula).length;
-    const percCom = total > 0 ? Math.round((com / total) * 100) : 0;
-    const percSem = total > 0 ? Math.round(((total - com) / total) * 100) : 0;
-    document.getElementById('qtdEventos').innerText = db.eventos.length;
-    document.getElementById('percCelula').innerText = percCom;
-    document.getElementById('percSemCelula').innerText = percSem;
-    document.getElementById('qtdCelulas').innerText = db.celulas.length;
-  }
-
-  function renderSelectFiltroCelula() {
-    const sel = document.getElementById('filtroCelula');
-    const atual = sel.value;
-    sel.innerHTML = '<option value="TODAS">Todas</option><option value="SEM">Sem célula</option>';
-    [...db.celulas].sort((a, b) => a.nome.localeCompare(b.nome)).forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c.id;
-      opt.textContent = c.nome;
-      sel.appendChild(opt);
+    onValue(ref(db, ".info/connected"), (snap) => {
+      if (snap.val() === true) {
+        statusDot.classList.remove("offline");
+        statusText.textContent = "Sincronizado ao vivo na nuvem";
+      } else {
+        statusDot.classList.add("offline");
+        statusText.textContent = "Reconectando...";
+      }
     });
-    sel.value = atual || 'TODAS';
-  }
 
-  function renderListaEventos() {
-    const lEv = document.getElementById('lista-ev');
-    lEv.innerHTML = '';
-    if (db.eventos.length === 0) {
-      lEv.innerHTML = '<div class="vazio">Nenhum evento agendado.</div>';
-      return;
-    }
-    const ordenados = [...db.eventos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
-    ordenados.forEach(e => {
-      const li = document.createElement('li');
-      const dataFormatada = e.data.split('-').reverse().join('/');
-      const desc = e.desc ? `<br><span style="color:#555">${escaparTexto(e.desc)}</span>` : '';
-      li.innerHTML = `<div><b>${escaparTexto(e.nome)}</b><br><small>📅 ${dataFormatada} às ${escaparTexto(e.hora)}${desc}</small></div>`;
-      lEv.appendChild(li);
+    onValue(ref(db, "igreja_dados"), (snapshot) => {
+      const data = snapshot.val() || {};
+      eventos = data.eventos ? Object.values(data.eventos) : [];
+      membros = data.membros ? Object.values(data.membros) : [];
+      celulas = data.celulas ? Object.values(data.celulas) : [];
+      atualizarTela();
     });
-  }
 
-  function renderListaMembros() {
-    const filtro = document.getElementById('buscaMembro').value.toLowerCase().trim();
-    const filtroCel = document.getElementById('filtroCelula').value;
-    const lMb = document.getElementById('lista-mb');
-    lMb.innerHTML = '';
-
-    const listaFiltrada = db.membros
-      .filter(m => m.nome.toLowerCase().includes(filtro))
-      .filter(m => {
-        if (filtroCel === 'TODAS') return true;
-        if (filtroCel === 'SEM') return !membroTemCelula(m);
-        return String(m.celulaId) === filtroCel;
-      })
-      .sort((a, b) => a.nome.localeCompare(b.nome));
-
-    if (listaFiltrada.length === 0) {
-      lMb.innerHTML = '<div class="vazio">Nenhum membro encontrado.</div>';
-      return;
+    function formatarData(dataStr) {
+      if (!dataStr) return "";
+      const [ano, mes, dia] = dataStr.split("-");
+      return `${dia}/${mes}/${ano}`;
     }
 
-    listaFiltrada.forEach(m => {
-      const cel = db.celulas.find(c => String(c.id) === String(m.celulaId));
-      const tag = cel ? `<span class="tag">${escaparTexto(cel.nome)}</span>` : `<span class="tag tag-fora">Fora de célula</span>`;
-      const tel = m.tel ? `<br><small>📞 ${escaparTexto(m.tel)}</small>` : '';
-      const digitosTel = (m.tel || '').replace(/\D/g, '');
-      const btnWpp = digitosTel.length >= 10
-        ? `<a href="https://wa.me/55${digitosTel}" target="_blank" rel="noopener" class="btn-wpp" title="Abrir WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`
-        : '';
+    function atualizarTela() {
+      const emCelulaCount = membros.filter(m => m.celula && m.celula !== "Fora de célula").length;
+      document.getElementById("totalMembros").textContent = membros.length;
+      document.getElementById("emCelulas").textContent = emCelulaCount;
+      document.getElementById("foraCelulas").textContent = membros.length - emCelulaCount;
+      document.getElementById("totalCelulas").textContent = celulas.length;
 
-      const li = document.createElement('li');
-      li.innerHTML = `<div><b>${escaparTexto(m.nome)}</b> ${tag}${tel}</div>${btnWpp}`;
-      lMb.appendChild(li);
-    });
-  }
+      const elEventos = document.getElementById("listaEventos");
+      if (!eventos.length) {
+        elEventos.innerHTML = '<p class="empty">Nenhum evento cadastrado.</p>';
+      } else {
+        const ordenados = [...eventos].sort((a, b) => (a.data || "").localeCompare(b.data || ""));
+        elEventos.innerHTML = ordenados.map(ev => `
+          <div class="item-card">
+            <h3>${ev.nome}</h3>
+            <p>📅 ${formatarData(ev.data)} ${ev.horario ? "• ⏰ " + ev.horario : ""}</p>
+            ${ev.descricao ? `<p>📍 ${ev.descricao}</p>` : ""}
+          </div>
+        `).join("");
+      }
 
-  function renderListaCelulas() {
-    const lCel = document.getElementById('lista-cel');
-    lCel.innerHTML = '';
-    if (db.celulas.length === 0) {
-      lCel.innerHTML = '<div class="vazio">Nenhuma célula cadastrada.</div>';
-      return;
+      renderizarMembros();
+
+      const elCelulas = document.getElementById("listaCelulas");
+      if (!celulas.length) {
+        elCelulas.innerHTML = '<p class="empty">Nenhuma célula cadastrada.</p>';
+      } else {
+        elCelulas.innerHTML = celulas.map(c => {
+          const qtd = membros.filter(m => m.celula === c.nome).length;
+          return `
+            <div class="item-card">
+              <h3>${c.nome}</h3>
+              <p>Líder: <strong>${c.lider || "Não informado"}</strong></p>
+              <span class="badge">${qtd} ${qtd === 1 ? "membro" : "membros"}</span>
+            </div>
+          `;
+        }).join("");
+      }
     }
 
-    [...db.celulas].sort((a, b) => a.nome.localeCompare(b.nome)).forEach(c => {
-      const membrosCel = db.membros
-        .filter(m => String(m.celulaId) === String(c.id))
-        .sort((a, b) => a.nome.localeCompare(b.nome));
+    function renderizarMembros() {
+      const termo = document.getElementById("buscaMembro").value.toLowerCase();
+      const filtrados = membros.filter(m =>
+        m.nome.toLowerCase().includes(termo) ||
+        (m.celula || "").toLowerCase().includes(termo)
+      );
+      const elMembros = document.getElementById("listaMembros");
+      if (!filtrados.length) {
+        elMembros.innerHTML = '<p class="empty">Nenhum membro encontrado.</p>';
+        return;
+      }
+      elMembros.innerHTML = filtrados.map(m => {
+        const semCelula = !m.celula || m.celula === "Fora de célula";
+        return `
+          <div class="item-card">
+            <h3>${m.nome}</h3>
+            ${m.telefone ? `<p>📱 ${m.telefone}</p>` : ""}
+            <span class="badge ${semCelula ? "none" : ""}">${m.celula || "Fora de célula"}</span>
+          </div>
+        `;
+      }).join("");
+    }
 
-      const divItem = document.createElement('div');
-      divItem.className = 'celula-item';
-      let listaHtml = '';
-      membrosCel.forEach(mc => {
-        listaHtml += `<li>${escaparTexto(mc.nome)}</li>`;
-      });
-      const lider = c.lider ? ` | Líder: ${escaparTexto(c.lider)}` : '';
-      divItem.innerHTML = `<b>${escaparTexto(c.nome)} (${membrosCel.length})${lider}</b><ul>${listaHtml || '<li style="list-style:none;color:#888;">Sem membros ainda</li>'}</ul>`;
-      lCel.appendChild(divItem);
-    });
-  }
-
-  document.getElementById('buscaMembro').addEventListener('input', renderListaMembros);
-  document.getElementById('filtroCelula').addEventListener('change', renderListaMembros);
-  render();
-</script>
+    document.getElementById("buscaMembro").addEventListener("input", renderizarMembros);
+  </script>
 </body>
 </html>
