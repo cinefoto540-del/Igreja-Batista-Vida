@@ -1,669 +1,527 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Igreja Batista Vida | Administrador</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-  * { box-sizing: border-box; }
-  body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; padding: 0; color: #333; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Igreja Batista Vida | Administrador</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
 
-  header { background: #1e3a8a; color: white; text-align: center; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); position: relative; }
-  header h1 { margin: 0; }
-  header p { margin: 6px 0 0; opacity: 0.9; font-size: 14px; }
-  .container { max-width: 1140px; margin: 24px auto; padding: 0 18px; }
+    /* Tela de Login */
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .login-box {
+      background: var(--card);
+      padding: 32px 24px;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .login-box h2 { color: var(--primary); margin-bottom: 8px; }
+    .login-box p { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
 
-  .btn-voltar { position: absolute; top: 20px; left: 20px; background: #475569; color: white; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; transition: 0.2s; }
-  .btn-voltar:hover { background: #334155; }
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+    header h1 { font-size: 1.7rem; margin-bottom: 4px; }
+    header p { opacity: 0.9; font-size: 0.92rem; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.18);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+    .dot.offline { background: #facc15; }
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
 
-  .login-box { max-width: 420px; margin: 30px auto; background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-  .oculto { display: none !important; }
+    .container { max-width: 1240px; margin: 24px auto; padding: 0 16px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card);
+      padding: 18px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .stat-card span { font-size: 0.88rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 600; }
+    .stat-card strong { font-size: 1.9rem; color: var(--primary); }
+    .stat-card.green strong { color: var(--success); }
+    .stat-card.orange strong { color: var(--warning); }
 
-  .toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: white; padding: 12px 18px; border-radius: 8px; box-shadow: 0 6px 16px rgba(0,0,0,0.2); font-size: 14px; font-weight: 500; z-index: 1000; opacity: 0; transform: translateY(10px); transition: all 0.25s ease; pointer-events: none; }
-  .toast.visivel { opacity: 1; transform: translateY(0); }
-  .toast.erro { background: #dc2626; }
-  .toast.sucesso { background: #059669; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 1.15rem;
+      color: var(--primary);
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 0.92rem;
+    }
+    textarea { resize: vertical; min-height: 68px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  .painel { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; margin-bottom: 24px; }
-  .caixa-num { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.08); font-size: 14px; font-weight: 500; }
-  .caixa-num span { display: block; font-size: 32px; font-weight: 700; color: #1e3a8a; margin-top: 8px; }
+    button {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary-light);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.93; }
+    button.cancel-btn { background: #64748b; margin-top: 6px; }
 
-  .colunas { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 22px; align-items: start; }
-  .card { background: white; padding: 22px; border-radius: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); }
+    .list { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+    .list-item {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .list-item-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+    .list-item-info p { font-size: 0.82rem; color: var(--muted); }
+    .actions { display: flex; gap: 6px; }
+    .actions button { width: auto; padding: 6px 10px; font-size: 0.8rem; }
+    .btn-edit { background: var(--warning); }
+    .btn-del { background: var(--danger); }
+    .empty { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 16px 0; }
 
-  h2 { margin-top: 0; color: #1e3a8a; font-size: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-
-  label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 13px; color: #374151; }
-  input, select, textarea { width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; transition: border-color 0.2s; }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
-
-  .linha-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  button { width: 100%; padding: 11px; margin-bottom: 10px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 14px; transition: 0.2s; }
-  button.salvar { background: #2563eb; color: white; }
-  button.salvar:hover { background: #1d4ed8; }
-  button.editando { background: #d97706; color: white; }
-  button.editando:hover { background: #b45309; }
-  button.cancelar { background: #e2e8f0; color: #334155; }
-  button.cancelar:hover { background: #cbd5e1; }
-
-  .acoes-item { display: flex; gap: 6px; flex-shrink: 0; }
-  .btn-mini { width: auto; padding: 5px 9px; font-size: 12px; margin: 0; border-radius: 5px; }
-  .btn-edit { background: #e0f2fe; color: #0369a1; }
-  .btn-edit:hover { background: #bae6fd; }
-  .btn-del { background: #fee2e2; color: #b91c1c; }
-  .btn-del:hover { background: #fecaca; }
-  .btn-wpp { background: #dcfce7; color: #15803d; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 5px 8px; border-radius: 5px; font-size: 13px; }
-  .btn-wpp:hover { background: #bbf7d0; }
-
-  .btn-secundario { background: #475569; color: white; width: auto; padding: 10px 16px; margin: 0; }
-  .btn-secundario:hover { background: #334155; }
-
-  .divisor { border-top: 1px solid #e5e7eb; margin: 16px 0; padding-top: 14px; }
-
-  ul { list-style: none; padding: 0; margin: 0; }
-  li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
-  li:last-child { border-bottom: none; }
-
-  .celula-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 10px; margin-bottom: 12px; }
-  .celula-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
-  .tag { display: inline-block; font-size: 12px; background: #dbeafe; color: #1e40af; padding: 2px 7px; border-radius: 5px; font-weight: 500; margin-left: 4px; }
-  .tag-fora { background: #fef3c7; color: #92400e; }
-  .vazio { color: #94a3b8; font-size: 13px; text-align: center; padding: 12px 0; }
-
-  .acoes-bottom { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; padding: 18px; background: #e2e8f0; border-radius: 12px; }
-
-  @media (max-width: 600px) {
-    .btn-voltar { position: static; display: inline-block; margin-bottom: 12px; }
-    .linha-dupla { grid-template-columns: 1fr; gap: 0; }
-  }
-</style>
+    @media (max-width: 640px) {
+      .back-btn { position: static; display: inline-block; margin-bottom: 10px; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <a href="./index.html" class="btn-voltar"><i class="fa-solid fa-arrow-left"></i> Voltar para Painel Principal</a>
-  <h1><i class="fa-solid fa-lock"></i> Área Administrador</h1>
-  <p>Gestão de Eventos, Membros e Células</p>
-</header>
-
-<div class="container">
-  <form class="login-box" id="formLogin">
-    <label for="senhaAdmin">🔑 Senha de acesso ao painel</label>
-    <input type="password" id="senhaAdmin" placeholder="Digite a senha" required autocomplete="current-password">
-    <button type="submit" class="salvar">Entrar</button>
-  </form>
-
-  <div id="conteudoAdmin" class="oculto">
-    <div class="painel">
-      <div class="caixa-num">👥 Total de Membros <span id="n-total">0</span></div>
-      <div class="caixa-num">✅ Em Células <span id="n-com">0</span></div>
-      <div class="caixa-num">⚠️ Fora das Células <span id="n-sem" style="color:#d97706">0</span></div>
-      <div class="caixa-num">🤝 Total de Células <span id="n-cel" style="color:#059669">0</span></div>
+  <!-- Tela de Senha -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>Área Administrador</h2>
+      <p>Digite a senha para gerenciar o sistema</p>
+      <input type="password" id="senhaInput" placeholder="Senha" />
+      <button id="btnEntrar">Entrar</button>
     </div>
+  </div>
 
-    <div class="colunas">
-      <!-- EVENTOS -->
-      <div class="card">
-        <h2><i class="fa-solid fa-calendar"></i> Eventos</h2>
-        <form id="formEvento">
-          <input type="hidden" id="ev-id">
-          <label for="ev-nome">Nome do Evento *</label>
-          <input type="text" id="ev-nome" placeholder="Ex: Culto de Celebração" required>
+  <!-- Painel Admin -->
+  <div id="adminPanel" style="display:none;">
+    <header>
+      <a href="index.html" class="back-btn">← Voltar para Painel Principal</a>
+      <h1>Área Administrador</h1>
+      <p>Gestão de Eventos, Membros e Células</p>
+      <div class="status-pill">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Conectando à nuvem...</span>
+      </div>
+    </header>
 
-          <div class="linha-dupla">
-            <div>
-              <label for="ev-data">Data *</label>
-              <input type="date" id="ev-data" required>
-            </div>
-            <div>
-              <label for="ev-hora">Horário *</label>
-              <input type="time" id="ev-hora" required>
-            </div>
-          </div>
-
-          <label for="ev-desc">Descrição / Local</label>
-          <textarea id="ev-desc" rows="2" placeholder="Ex: Templo principal ou endereço"></textarea>
-
-          <button type="submit" class="salvar" id="btnSubmitEvento">Adicionar Evento</button>
-          <button type="button" class="cancelar oculto" id="btnCancelEvento">Cancelar Edição</button>
-        </form>
-        <div class="divisor">
-          <ul id="lista-ev"></ul>
-        </div>
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card"><span>Total de Membros</span><strong id="totalMembros">0</strong></div>
+        <div class="stat-card green"><span>Em Células</span><strong id="emCelulas">0</strong></div>
+        <div class="stat-card orange"><span>Fora das Células</span><strong id="foraCelulas">0</strong></div>
+        <div class="stat-card"><span>Total de Células</span><strong id="totalCelulas">0</strong></div>
       </div>
 
-      <!-- MEMBROS -->
-      <div class="card">
-        <h2><i class="fa-solid fa-users"></i> Membros</h2>
-        <form id="formMembro">
-          <input type="hidden" id="mb-id">
-          <label for="mb-nome">Nome do Membro *</label>
-          <input type="text" id="mb-nome" placeholder="Nome completo" required>
+      <div class="grid-3">
+        <!-- EVENTOS -->
+        <div class="card">
+          <h2>Eventos</h2>
+          <form id="formEvento">
+            <input type="hidden" id="eventoEditId" />
+            <label>Nome do Evento *</label>
+            <input type="text" id="evNome" placeholder="Ex: Culto de Celebração" required />
+            <div class="row-2">
+              <div>
+                <label>Data *</label>
+                <input type="date" id="evData" required />
+              </div>
+              <div>
+                <label>Horário</label>
+                <input type="time" id="evHora" />
+              </div>
+            </div>
+            <label>Descrição / Local</label>
+            <textarea id="evDesc" placeholder="Ex: Templo principal ou endereço"></textarea>
+            <button type="submit" id="btnSalvarEvento">Adicionar Evento</button>
+            <button type="button" class="cancel-btn" id="btnCancelarEvento" style="display:none;">Cancelar Edição</button>
+          </form>
+          <div class="list" id="listaEventos"></div>
+        </div>
 
-          <label for="mb-tel">Telefone / WhatsApp</label>
-          <input type="tel" id="mb-tel" placeholder="(00) 90000-0000" maxlength="15">
+        <!-- MEMBROS -->
+        <div class="card">
+          <h2>Membros</h2>
+          <form id="formMembro">
+            <input type="hidden" id="membroEditId" />
+            <label>Nome do Membro *</label>
+            <input type="text" id="memNome" placeholder="Nome completo" required />
+            <label>Telefone / WhatsApp</label>
+            <input type="text" id="memTel" placeholder="(00) 90000-0000" maxlength="15" />
+            <label>Célula</label>
+            <select id="memCelula">
+              <option value="Fora de célula">Fora de célula</option>
+            </select>
+            <button type="submit" id="btnSalvarMembro">Adicionar Membro</button>
+            <button type="button" class="cancel-btn" id="btnCancelarMembro" style="display:none;">Cancelar Edição</button>
+          </form>
 
-          <label for="mb-celula">Célula</label>
-          <select id="mb-celula"><option value="">Fora de célula</option></select>
-
-          <button type="submit" class="salvar" id="btnSubmitMembro">Adicionar Membro</button>
-          <button type="button" class="cancelar oculto" id="btnCancelMembro">Cancelar Edição</button>
-        </form>
-
-        <div class="divisor">
-          <div class="linha-dupla">
+          <div class="row-2" style="margin-top:16px;">
             <div>
-              <label for="buscaMembro">Buscar por nome</label>
-              <input type="text" id="buscaMembro" placeholder="🔍 Filtrar nome...">
+              <label>Buscar por nome</label>
+              <input type="text" id="filtroNome" placeholder="Filtrar nome..." />
             </div>
             <div>
-              <label for="filtroCelulaMembro">Filtrar por célula</label>
-              <select id="filtroCelulaMembro">
-                <option value="TODAS">Todas</option>
-                <option value="SEM">Fora de célula</option>
+              <label>Filtrar por célula</label>
+              <select id="filtroCelula">
+                <option value="Todas">Todas</option>
               </select>
             </div>
           </div>
-          <ul id="lista-mb"></ul>
+          <div class="list" id="listaMembros"></div>
+        </div>
+
+        <!-- CÉLULAS -->
+        <div class="card">
+          <h2>Células</h2>
+          <form id="formCelula">
+            <input type="hidden" id="celulaEditId" />
+            <label>Nome da Célula *</label>
+            <input type="text" id="celNome" placeholder="Ex: Célula Betânia" required />
+            <label>Líder da Célula</label>
+            <input type="text" id="celLider" placeholder="Nome do líder" />
+            <button type="submit" id="btnSalvarCelula">Criar Célula</button>
+            <button type="button" class="cancel-btn" id="btnCancelarCelula" style="display:none;">Cancelar Edição</button>
+          </form>
+          <div class="list" id="listaCelulas"></div>
         </div>
       </div>
-
-      <!-- CÉLULAS -->
-      <div class="card">
-        <h2><i class="fa-solid fa-handshake"></i> Células</h2>
-        <form id="formCelula">
-          <input type="hidden" id="cel-id">
-          <label for="cel-nome">Nome da Célula *</label>
-          <input type="text" id="cel-nome" placeholder="Ex: Célula Betânia" required>
-
-          <label for="cel-lider">Líder da Célula</label>
-          <input type="text" id="cel-lider" placeholder="Nome do líder">
-
-          <button type="submit" class="salvar" id="btnSubmitCelula">Criar Célula</button>
-          <button type="button" class="cancelar oculto" id="btnCancelCelula">Cancelar Edição</button>
-        </form>
-        <div class="divisor">
-          <div id="lista-cel"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="acoes-bottom">
-      <button type="button" class="btn-secundario" id="btnExport"><i class="fa-solid fa-download"></i> Exportar Backup</button>
-      <button type="button" class="btn-secundario" id="btnImport"><i class="fa-solid fa-upload"></i> Importar Dados</button>
-      <input type="file" id="fileImport" accept=".json" style="display:none;">
     </div>
   </div>
-</div>
 
-<div id="toast" class="toast"></div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, set, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-<script>
-  const db = { eventos: [], membros: [], celulas: [] };
-  const SENHA_CORRETA = "dede";
+    const FIREBASE_DB_URL = "https://igreja-batista-vida-b184c-default-rtdb.firebaseio.com";
+    const SENHA_ADMIN = "dede";
 
-  try {
-    const salvo = localStorage.getItem('ibv_db');
-    if (salvo) {
-      const parsed = JSON.parse(salvo);
-      if (Array.isArray(parsed.eventos)) db.eventos = parsed.eventos;
-      if (Array.isArray(parsed.membros)) db.membros = parsed.membros;
-      if (Array.isArray(parsed.celulas)) db.celulas = parsed.celulas;
+    const app = initializeApp({ databaseURL: FIREBASE_DB_URL });
+    const db = getDatabase(app);
+
+    let eventos = {};
+    let membros = {};
+    let celulas = {};
+
+    // Login
+    function liberarPainel() {
+      sessionStorage.setItem("ibv_admin", "ok");
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("adminPanel").style.display = "block";
     }
-  } catch (e) {}
+    if (sessionStorage.getItem("ibv_admin") === "ok") liberarPainel();
 
-  let toastTimer;
-  function mostrarAviso(mensagem, tipo = 'sucesso') {
-    const el = document.getElementById('toast');
-    el.textContent = mensagem;
-    el.className = `toast visivel ${tipo}`;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('visivel'), 2800);
-  }
-
-  function escaparTexto(texto) {
-    if (!texto) return '';
-    return String(texto).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function formatarTelefone(valor) {
-    const digitos = String(valor || '').replace(/\D/g, '').slice(0, 11);
-    if (digitos.length <= 2) return digitos.length ? `(${digitos}` : '';
-    if (digitos.length <= 6) return `(${digitos.slice(0, 2)}) ${digitos.slice(2)}`;
-    if (digitos.length <= 10) return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 6)}-${digitos.slice(6)}`;
-    return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 7)}-${digitos.slice(7)}`;
-  }
-
-  function salvar(mensagem) {
-    try {
-      localStorage.setItem('ibv_db', JSON.stringify(db));
-      if (mensagem) mostrarAviso(mensagem, 'sucesso');
-    } catch (e) {
-      mostrarAviso('Erro ao salvar os dados no navegador!', 'erro');
-    }
-    render();
-  }
-
-  // LOGIN
-  const formLogin = document.getElementById('formLogin');
-  const conteudoAdmin = document.getElementById('conteudoAdmin');
-
-  if (sessionStorage.getItem('ibv_admin_auth') === '1') {
-    formLogin.classList.add('oculto');
-    conteudoAdmin.classList.remove('oculto');
-    render();
-  }
-
-  formLogin.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const senhaDigitada = document.getElementById('senhaAdmin').value.trim();
-    if (senhaDigitada === SENHA_CORRETA) {
-      sessionStorage.setItem('ibv_admin_auth', '1');
-      formLogin.classList.add('oculto');
-      conteudoAdmin.classList.remove('oculto');
-      render();
-      mostrarAviso('Acesso Administrador liberado!');
-    } else {
-      mostrarAviso('Senha incorreta!', 'erro');
-      document.getElementById('senhaAdmin').select();
-    }
-  });
-
-  // BACKUP EXPORTAR / IMPORTAR
-  document.getElementById('btnExport').addEventListener('click', function() {
-    const dataHoje = new Date().toISOString().slice(0, 10);
-    const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ibv-backup-${dataHoje}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    mostrarAviso('Backup exportado!');
-  });
-
-  document.getElementById('btnImport').addEventListener('click', function() {
-    document.getElementById('fileImport').click();
-  });
-
-  document.getElementById('fileImport').addEventListener('change', function(event) {
-    const arquivo = event.target.files[0];
-    if (!arquivo) return;
-    const leitor = new FileReader();
-    leitor.onload = function(e) {
-      try {
-        const dados = JSON.parse(e.target.result);
-        if (!dados || !Array.isArray(dados.eventos) || !Array.isArray(dados.membros) || !Array.isArray(dados.celulas)) {
-          throw new Error('Formato inválido');
-        }
-        if (confirm('Tem certeza? Isso substituirá todos os dados atuais!')) {
-          db.eventos = dados.eventos;
-          db.membros = dados.membros;
-          db.celulas = dados.celulas;
-          salvar('Dados importados com sucesso!');
-        }
-      } catch (err) {
-        mostrarAviso('Arquivo JSON inválido ou corrompido!', 'erro');
-      } finally {
-        event.target.value = '';
+    document.getElementById("btnEntrar").addEventListener("click", () => {
+      if (document.getElementById("senhaInput").value === SENHA_ADMIN) {
+        liberarPainel();
+      } else {
+        alert("Senha incorreta!");
       }
-    };
-    leitor.readAsText(arquivo);
-  });
-
-  // FORMULÁRIO EVENTOS
-  function resetFormEvento() {
-    document.getElementById('formEvento').reset();
-    document.getElementById('ev-id').value = '';
-    const btn = document.getElementById('btnSubmitEvento');
-    btn.textContent = 'Adicionar Evento';
-    btn.className = 'salvar';
-    document.getElementById('btnCancelEvento').classList.add('oculto');
-  }
-
-  document.getElementById('btnCancelEvento').addEventListener('click', resetFormEvento);
-
-  document.getElementById('formEvento').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const idEdicao = document.getElementById('ev-id').value;
-    const nome = document.getElementById('ev-nome').value.trim();
-    const data = document.getElementById('ev-data').value;
-    const hora = document.getElementById('ev-hora').value;
-    const desc = document.getElementById('ev-desc').value.trim();
-
-    if (!nome || !data || !hora) {
-      mostrarAviso('Preencha nome, data e horário!', 'erro');
-      return;
-    }
-
-    if (idEdicao) {
-      const ev = db.eventos.find(item => String(item.id) === idEdicao);
-      if (ev) Object.assign(ev, { nome, data, hora, desc });
-      resetFormEvento();
-      salvar('Evento atualizado!');
-    } else {
-      db.eventos.push({ id: Date.now(), nome, data, hora, desc });
-      resetFormEvento();
-      salvar('Evento adicionado!');
-    }
-  });
-
-  function editarEvento(id) {
-    const ev = db.eventos.find(e => e.id === id);
-    if (!ev) return;
-    document.getElementById('ev-id').value = ev.id;
-    document.getElementById('ev-nome').value = ev.nome;
-    document.getElementById('ev-data').value = ev.data;
-    document.getElementById('ev-hora').value = ev.hora;
-    document.getElementById('ev-desc').value = ev.desc || '';
-    const btn = document.getElementById('btnSubmitEvento');
-    btn.textContent = 'Salvar Alterações';
-    btn.className = 'editando';
-    document.getElementById('btnCancelEvento').classList.remove('oculto');
-    document.getElementById('ev-nome').focus();
-  }
-
-  function delEvento(id) {
-    if (confirm('Tem certeza que deseja excluir esse evento?')) {
-      db.eventos = db.eventos.filter(e => e.id !== id);
-      if (document.getElementById('ev-id').value === String(id)) resetFormEvento();
-      salvar('Evento excluído!');
-    }
-  }
-
-  // FORMULÁRIO MEMBROS
-  const inputTel = document.getElementById('mb-tel');
-  inputTel.addEventListener('input', (e) => {
-    e.target.value = formatarTelefone(e.target.value);
-  });
-
-  function resetFormMembro() {
-    document.getElementById('mb-id').value = '';
-    document.getElementById('mb-nome').value = '';
-    inputTel.value = '';
-    document.getElementById('mb-celula').value = '';
-    const btn = document.getElementById('btnSubmitMembro');
-    btn.textContent = 'Adicionar Membro';
-    btn.className = 'salvar';
-    document.getElementById('btnCancelMembro').classList.add('oculto');
-  }
-
-  document.getElementById('btnCancelMembro').addEventListener('click', resetFormMembro);
-
-  document.getElementById('formMembro').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const idEdicao = document.getElementById('mb-id').value;
-    const nome = document.getElementById('mb-nome').value.trim();
-    const tel = inputTel.value.trim();
-    const cel = document.getElementById('mb-celula').value;
-
-    if (!nome) {
-      mostrarAviso('Digite o nome do membro!', 'erro');
-      return;
-    }
-
-    if (idEdicao) {
-      const mb = db.membros.find(item => String(item.id) === idEdicao);
-      if (mb) Object.assign(mb, { nome, tel, celulaId: cel });
-      resetFormMembro();
-      salvar('Membro atualizado!');
-    } else {
-      db.membros.push({ id: Date.now(), nome, tel, celulaId: cel });
-      resetFormMembro();
-      salvar('Membro adicionado!');
-    }
-  });
-
-  function editarMembro(id) {
-    const mb = db.membros.find(m => m.id === id);
-    if (!mb) return;
-    document.getElementById('mb-id').value = mb.id;
-    document.getElementById('mb-nome').value = mb.nome;
-    inputTel.value = formatarTelefone(mb.tel || '');
-    document.getElementById('mb-celula').value = mb.celulaId || '';
-    const btn = document.getElementById('btnSubmitMembro');
-    btn.textContent = 'Salvar Alterações';
-    btn.className = 'editando';
-    document.getElementById('btnCancelMembro').classList.remove('oculto');
-    document.getElementById('mb-nome').focus();
-  }
-
-  function delMembro(id) {
-    if (confirm('Tem certeza que deseja excluir esse membro?')) {
-      db.membros = db.membros.filter(m => m.id !== id);
-      if (document.getElementById('mb-id').value === String(id)) resetFormMembro();
-      salvar('Membro excluído!');
-    }
-  }
-
-  function mudarCelula(membroId, celulaId) {
-    db.membros.forEach(m => {
-      if (String(m.id) === String(membroId)) m.celulaId = String(celulaId);
     });
-    salvar(celulaId ? 'Membro adicionado à célula!' : 'Membro removido da célula!');
-  }
-
-  // FORMULÁRIO CÉLULAS
-  function resetFormCelula() {
-    document.getElementById('formCelula').reset();
-    document.getElementById('cel-id').value = '';
-    const btn = document.getElementById('btnSubmitCelula');
-    btn.textContent = 'Criar Célula';
-    btn.className = 'salvar';
-    document.getElementById('btnCancelCelula').classList.add('oculto');
-  }
-
-  document.getElementById('btnCancelCelula').addEventListener('click', resetFormCelula);
-
-  document.getElementById('formCelula').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const idEdicao = document.getElementById('cel-id').value;
-    const nome = document.getElementById('cel-nome').value.trim();
-    const lider = document.getElementById('cel-lider').value.trim();
-
-    if (!nome) {
-      mostrarAviso('Digite o nome da célula!', 'erro');
-      return;
-    }
-
-    if (idEdicao) {
-      const cel = db.celulas.find(item => String(item.id) === idEdicao);
-      if (cel) Object.assign(cel, { nome, lider });
-      resetFormCelula();
-      salvar('Célula atualizada!');
-    } else {
-      db.celulas.push({ id: Date.now(), nome, lider });
-      resetFormCelula();
-      salvar('Célula criada!');
-    }
-  });
-
-  function editarCelula(id) {
-    const cel = db.celulas.find(c => c.id === id);
-    if (!cel) return;
-    document.getElementById('cel-id').value = cel.id;
-    document.getElementById('cel-nome').value = cel.nome;
-    document.getElementById('cel-lider').value = cel.lider || '';
-    const btn = document.getElementById('btnSubmitCelula');
-    btn.textContent = 'Salvar Alterações';
-    btn.className = 'editando';
-    document.getElementById('btnCancelCelula').classList.remove('oculto');
-    document.getElementById('cel-nome').focus();
-  }
-
-  function delCelula(id) {
-    if (confirm('Tem certeza que deseja excluir essa célula? Os membros ficarão fora de célula!')) {
-      db.celulas = db.celulas.filter(c => c.id !== id);
-      db.membros.forEach(m => { if (String(m.celulaId) === String(id)) m.celulaId = ''; });
-      if (document.getElementById('cel-id').value === String(id)) resetFormCelula();
-      salvar('Célula excluída!');
-    }
-  }
-
-  document.getElementById('buscaMembro').addEventListener('input', renderListaMembros);
-  document.getElementById('filtroCelulaMembro').addEventListener('change', renderListaMembros);
-
-  // RENDERIZAÇÃO
-  function render() {
-    renderPainelNumeros();
-    renderSelectsCelulas();
-    renderListaEventos();
-    renderListaMembros();
-    renderListaCelulas();
-  }
-
-  function membroTemCelula(m) {
-    return Boolean(m.celulaId && db.celulas.some(c => String(c.id) === String(m.celulaId)));
-  }
-
-  function renderPainelNumeros() {
-    const total = db.membros.length;
-    const com = db.membros.filter(membroTemCelula).length;
-    document.getElementById('n-total').innerText = total;
-    document.getElementById('n-com').innerText = com;
-    document.getElementById('n-sem').innerText = total - com;
-    document.getElementById('n-cel').innerText = db.celulas.length;
-  }
-
-  function renderSelectsCelulas() {
-    const selForm = document.getElementById('mb-celula');
-    const valorAtualForm = selForm.value;
-    selForm.innerHTML = '<option value="">Fora de célula</option>';
-
-    const selFiltro = document.getElementById('filtroCelulaMembro');
-    const valorAtualFiltro = selFiltro.value;
-    selFiltro.innerHTML = '<option value="TODAS">Todas</option><option value="SEM">Fora de célula</option>';
-
-    const celulasOrdenadas = [...db.celulas].sort((a, b) => a.nome.localeCompare(b.nome));
-    celulasOrdenadas.forEach(c => {
-      const opt1 = document.createElement('option');
-      opt1.value = c.id;
-      opt1.textContent = c.nome;
-      selForm.appendChild(opt1);
-
-      const opt2 = document.createElement('option');
-      opt2.value = c.id;
-      opt2.textContent = c.nome;
-      selFiltro.appendChild(opt2);
+    document.getElementById("senhaInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") document.getElementById("btnEntrar").click();
     });
 
-    selForm.value = valorAtualForm;
-    selFiltro.value = valorAtualFiltro || 'TODAS';
-  }
-
-  function renderListaEventos() {
-    const lEv = document.getElementById('lista-ev');
-    lEv.innerHTML = '';
-    if (db.eventos.length === 0) {
-      lEv.innerHTML = '<div class="vazio">Nenhum evento cadastrado.</div>';
-      return;
-    }
-    const ordenados = [...db.eventos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
-    ordenados.forEach(e => {
-      const li = document.createElement('li');
-      const dataFormatada = e.data.split('-').reverse().join('/');
-      const desc = e.desc ? `<br>${escaparTexto(e.desc)}` : '';
-      li.innerHTML = `
-        <div>
-          <b>${escaparTexto(e.nome)}</b><br>
-          <small>📅 ${dataFormatada} às ${escaparTexto(e.hora)}${desc}</small>
-        </div>
-        <div class="acoes-item">
-          <button type="button" class="btn-mini btn-edit" title="Editar" onclick="editarEvento(${e.id})"><i class="fa-solid fa-pen"></i></button>
-          <button type="button" class="btn-mini btn-del" title="Excluir" onclick="delEvento(${e.id})"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      `;
-      lEv.appendChild(li);
+    // Status conexão
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    onValue(ref(db, ".info/connected"), (snap) => {
+      if (snap.val() === true) {
+        statusDot.classList.remove("offline");
+        statusText.textContent = "Sincronizado com a nuvem";
+      } else {
+        statusDot.classList.add("offline");
+        statusText.textContent = "Reconectando...";
+      }
     });
-  }
 
-  function renderListaMembros() {
-    const termo = document.getElementById('buscaMembro').value.toLowerCase().trim();
-    const filtroCel = document.getElementById('filtroCelulaMembro').value;
-    const lMb = document.getElementById('lista-mb');
-    lMb.innerHTML = '';
-
-    const listaFiltrada = db.membros
-      .filter(m => m.nome.toLowerCase().includes(termo))
-      .filter(m => {
-        if (filtroCel === 'TODAS') return true;
-        if (filtroCel === 'SEM') return !membroTemCelula(m);
-        return String(m.celulaId) === filtroCel;
-      })
-      .sort((a, b) => a.nome.localeCompare(b.nome));
-
-    if (listaFiltrada.length === 0) {
-      lMb.innerHTML = '<div class="vazio">Nenhum membro encontrado.</div>';
-      return;
-    }
-
-    listaFiltrada.forEach(m => {
-      const cel = db.celulas.find(c => String(c.id) === String(m.celulaId));
-      const tag = cel ? `<span class="tag">${escaparTexto(cel.nome)}</span>` : `<span class="tag tag-fora">Fora de célula</span>`;
-      const digitosTel = (m.tel || '').replace(/\D/g, '');
-      const btnWpp = digitosTel.length >= 10
-        ? `<a href="https://wa.me/55${digitosTel}" target="_blank" rel="noopener" class="btn-wpp" title="Abrir WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`
-        : '';
-      const telTexto = m.tel ? `<br><small>📞 ${escaparTexto(m.tel)}</small>` : '';
-
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <div><b>${escaparTexto(m.nome)}</b> ${tag}${telTexto}</div>
-        <div class="acoes-item">
-          ${btnWpp}
-          <button type="button" class="btn-mini btn-edit" title="Editar" onclick="editarMembro(${m.id})"><i class="fa-solid fa-pen"></i></button>
-          <button type="button" class="btn-mini btn-del" title="Excluir" onclick="delMembro(${m.id})"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      `;
-      lMb.appendChild(li);
+    // Escutar banco em tempo real
+    onValue(ref(db, "igreja_dados"), (snapshot) => {
+      const data = snapshot.val() || {};
+      eventos = data.eventos || {};
+      membros = data.membros || {};
+      celulas = data.celulas || {};
+      atualizarTudo();
     });
-  }
 
-  function renderListaCelulas() {
-    const lCel = document.getElementById('lista-cel');
-    lCel.innerHTML = '';
-    if (db.celulas.length === 0) {
-      lCel.innerHTML = '<div class="vazio">Nenhuma célula cadastrada.</div>';
-      return;
-    }
+    // Máscara Telefone
+    document.getElementById("memTel").addEventListener("input", (e) => {
+      let v = e.target.value.replace(/\D/g, "");
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      e.target.value = v;
+    });
 
-    const livres = db.membros.filter(m => !membroTemCelula(m)).sort((a, b) => a.nome.localeCompare(b.nome));
-    const celulasOrdenadas = [...db.celulas].sort((a, b) => a.nome.localeCompare(b.nome));
+    function atualizarTudo() {
+      const listaM = Object.entries(membros);
+      const listaC = Object.entries(celulas);
+      const listaE = Object.entries(eventos);
 
-    celulasOrdenadas.forEach(c => {
-      const membrosCel = db.membros.filter(m => String(m.celulaId) === String(c.id)).sort((a, b) => a.nome.localeCompare(b.nome));
-      const divItem = document.createElement('div');
-      divItem.className = 'celula-item';
+      const emCelulaCount = listaM.filter(([, m]) => m.celula && m.celula !== "Fora de célula").length;
+      document.getElementById("totalMembros").textContent = listaM.length;
+      document.getElementById("emCelulas").textContent = emCelulaCount;
+      document.getElementById("foraCelulas").textContent = listaM.length - emCelulaCount;
+      document.getElementById("totalCelulas").textContent = listaC.length;
 
-      let opt = '<option value="">+ Adicionar membro sem célula...</option>';
-      livres.forEach(l => opt += `<option value="${l.id}">${escaparTexto(l.nome)}</option>`);
+      // Atualiza selects de células
+      const selCel = document.getElementById("memCelula");
+      const filCel = document.getElementById("filtroCelula");
+      const valAtual = selCel.value;
+      const filAtual = filCel.value;
 
-      let listaHtml = '';
-      membrosCel.forEach(mc => {
-        listaHtml += `<li><span>${escaparTexto(mc.nome)}</span><button type="button" class="btn-mini btn-del" onclick="mudarCelula(${mc.id}, '')">Tirar</button></li>`;
+      selCel.innerHTML = '<option value="Fora de célula">Fora de célula</option>';
+      filCel.innerHTML = '<option value="Todas">Todas</option><option value="Fora de célula">Fora de célula</option>';
+
+      listaC.forEach(([, c]) => {
+        selCel.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
+        filCel.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
       });
+      selCel.value = valAtual || "Fora de célula";
+      filCel.value = filAtual || "Todas";
 
-      const liderTexto = c.lider ? `<br><small style="color:#475569;">Líder: ${escaparTexto(c.lider)}</small>` : '';
-
-      divItem.innerHTML = `
-        <div class="celula-header">
-          <div><b>${escaparTexto(c.nome)} (${membrosCel.length})</b>${liderTexto}</div>
-          <div class="acoes-item">
-            <button type="button" class="btn-mini btn-edit" title="Editar célula" onclick="editarCelula(${c.id})"><i class="fa-solid fa-pen"></i></button>
-            <button type="button" class="btn-mini btn-del" title="Excluir célula" onclick="delCelula(${c.id})"><i class="fa-solid fa-trash"></i></button>
+      // Render Eventos
+      const elEv = document.getElementById("listaEventos");
+      elEv.innerHTML = listaE.length ? listaE.map(([id, ev]) => `
+        <div class="list-item">
+          <div class="list-item-info">
+            <h4>${ev.nome}</h4>
+            <p>${ev.data.split("-").reverse().join("/")} ${ev.horario || ""}</p>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-edit" onclick="editarEvento('${id}')">Editar</button>
+            <button type="button" class="btn-del" onclick="excluirItem('eventos','${id}')">X</button>
           </div>
         </div>
-        <select onchange="if(this.value) mudarCelula(this.value, ${c.id})">${opt}</select>
-        <ul>${listaHtml || '<li class="vazio">Nenhum membro nesta célula</li>'}</ul>
-      `;
-      lCel.appendChild(divItem);
+      `).join("") : '<p class="empty">Nenhum evento cadastrado.</p>';
+
+      // Render Células
+      const elCel = document.getElementById("listaCelulas");
+      elCel.innerHTML = listaC.length ? listaC.map(([id, c]) => `
+        <div class="list-item">
+          <div class="list-item-info">
+            <h4>${c.nome}</h4>
+            <p>Líder: ${c.lider || "Não informado"}</p>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-edit" onclick="editarCelula('${id}')">Editar</button>
+            <button type="button" class="btn-del" onclick="excluirItem('celulas','${id}')">X</button>
+          </div>
+        </div>
+      `).join("") : '<p class="empty">Nenhuma célula cadastrada.</p>';
+
+      renderMembros();
+    }
+
+    function renderMembros() {
+      const fNome = document.getElementById("filtroNome").value.toLowerCase();
+      const fCel = document.getElementById("filtroCelula").value;
+      const filtrados = Object.entries(membros).filter(([, m]) => {
+        const matchNome = m.nome.toLowerCase().includes(fNome);
+        const matchCel = fCel === "Todas" || (m.celula || "Fora de célula") === fCel;
+        return matchNome && matchCel;
+      });
+      const elMem = document.getElementById("listaMembros");
+      elMem.innerHTML = filtrados.length ? filtrados.map(([id, m]) => `
+        <div class="list-item">
+          <div class="list-item-info">
+            <h4>${m.nome}</h4>
+            <p>${m.telefone || "Sem telefone"} • ${m.celula || "Fora de célula"}</p>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-edit" onclick="editarMembro('${id}')">Editar</button>
+            <button type="button" class="btn-del" onclick="excluirItem('membros','${id}')">X</button>
+          </div>
+        </div>
+      `).join("") : '<p class="empty">Nenhum membro encontrado.</p>';
+    }
+
+    document.getElementById("filtroNome").addEventListener("input", renderMembros);
+    document.getElementById("filtroCelula").addEventListener("change", renderMembros);
+
+    // Salvar Evento
+    document.getElementById("formEvento").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById("eventoEditId").value;
+      const dados = {
+        nome: document.getElementById("evNome").value.trim(),
+        data: document.getElementById("evData").value,
+        horario: document.getElementById("evHora").value,
+        descricao: document.getElementById("evDesc").value.trim()
+      };
+      const targetRef = editId ? ref(db, `igreja_dados/eventos/${editId}`) : push(ref(db, "igreja_dados/eventos"));
+      await set(targetRef, dados);
+      resetEvento();
     });
-  }
-</script>
+
+    function resetEvento() {
+      document.getElementById("formEvento").reset();
+      document.getElementById("eventoEditId").value = "";
+      document.getElementById("btnSalvarEvento").textContent = "Adicionar Evento";
+      document.getElementById("btnCancelarEvento").style.display = "none";
+    }
+    document.getElementById("btnCancelarEvento").addEventListener("click", resetEvento);
+
+    // Salvar Membro
+    document.getElementById("formMembro").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById("membroEditId").value;
+      const dados = {
+        nome: document.getElementById("memNome").value.trim(),
+        telefone: document.getElementById("memTel").value.trim(),
+        celula: document.getElementById("memCelula").value
+      };
+      const targetRef = editId ? ref(db, `igreja_dados/membros/${editId}`) : push(ref(db, "igreja_dados/membros"));
+      await set(targetRef, dados);
+      resetMembro();
+    });
+
+    function resetMembro() {
+      document.getElementById("formMembro").reset();
+      document.getElementById("membroEditId").value = "";
+      document.getElementById("btnSalvarMembro").textContent = "Adicionar Membro";
+      document.getElementById("btnCancelarMembro").style.display = "none";
+    }
+    document.getElementById("btnCancelarMembro").addEventListener("click", resetMembro);
+
+    // Salvar Célula
+    document.getElementById("formCelula").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById("celulaEditId").value;
+      const dados = {
+        nome: document.getElementById("celNome").value.trim(),
+        lider: document.getElementById("celLider").value.trim()
+      };
+      const targetRef = editId ? ref(db, `igreja_dados/celulas/${editId}`) : push(ref(db, "igreja_dados/celulas"));
+      await set(targetRef, dados);
+      resetCelula();
+    });
+
+    function resetCelula() {
+      document.getElementById("formCelula").reset();
+      document.getElementById("celulaEditId").value = "";
+      document.getElementById("btnSalvarCelula").textContent = "Criar Célula";
+      document.getElementById("btnCancelarCelula").style.display = "none";
+    }
+    document.getElementById("btnCancelarCelula").addEventListener("click", resetCelula);
+
+    // Funções globais de edição/exclusão
+    window.editarEvento = (id) => {
+      const ev = eventos[id];
+      document.getElementById("eventoEditId").value = id;
+      document.getElementById("evNome").value = ev.nome;
+      document.getElementById("evData").value = ev.data;
+      document.getElementById("evHora").value = ev.horario || "";
+      document.getElementById("evDesc").value = ev.descricao || "";
+      document.getElementById("btnSalvarEvento").textContent = "Salvar Alterações";
+      document.getElementById("btnCancelarEvento").style.display = "block";
+    };
+
+    window.editarMembro = (id) => {
+      const m = membros[id];
+      document.getElementById("membroEditId").value = id;
+      document.getElementById("memNome").value = m.nome;
+      document.getElementById("memTel").value = m.telefone || "";
+      document.getElementById("memCelula").value = m.celula || "Fora de célula";
+      document.getElementById("btnSalvarMembro").textContent = "Salvar Alterações";
+      document.getElementById("btnCancelarMembro").style.display = "block";
+    };
+
+    window.editarCelula = (id) => {
+      const c = celulas[id];
+      document.getElementById("celulaEditId").value = id;
+      document.getElementById("celNome").value = c.nome;
+      document.getElementById("celLider").value = c.lider || "";
+      document.getElementById("btnSalvarCelula").textContent = "Salvar Alterações";
+      document.getElementById("btnCancelarCelula").style.display = "block";
+    };
+
+    window.excluirItem = async (tipo, id) => {
+      if (confirm("Deseja realmente excluir este item?")) {
+        await remove(ref(db, `igreja_dados/${tipo}/${id}`));
+      }
+    };
+  </script>
 </body>
 </html>
