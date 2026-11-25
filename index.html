@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Igreja Batista Vida | Painel Principal</title>
+  <title>Igreja Batista Vida | Cadastro & Painel ao Vivo</title>
   <style>
     :root {
       --primary: #1e3a8a;
@@ -12,27 +12,29 @@
       --card: #ffffff;
       --text: #1e293b;
       --muted: #64748b;
-      --border: #e2e8f0;
+      --border: #cbd5e1;
       --success: #16a34a;
+      --visitor: #7c3aed;
       --warning: #d97706;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 48px; }
+
     header {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: #fff;
-      padding: 24px 20px;
+      padding: 24px 16px;
       text-align: center;
       position: relative;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    header h1 { font-size: 1.8rem; margin-bottom: 6px; }
-    header p { opacity: 0.9; font-size: 0.95rem; }
+    header h1 { font-size: 1.75rem; margin-bottom: 4px; }
+    header p { opacity: 0.92; font-size: 0.95rem; }
     .status-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.18);
       padding: 4px 12px;
       border-radius: 999px;
       font-size: 0.8rem;
@@ -42,96 +44,221 @@
     .dot.offline { background: #facc15; }
     .admin-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--success);
+      top: 18px;
+      right: 18px;
+      background: rgba(255,255,255,0.18);
       color: #fff;
       text-decoration: none;
-      padding: 8px 14px;
+      padding: 7px 13px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-    .admin-btn:hover { opacity: 0.92; }
-    .container { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+    .admin-btn:hover { background: rgba(255,255,255,0.28); }
+
+    .container { max-width: 1100px; margin: 22px auto; padding: 0 16px; }
+
+    /* Formulário Público */
+    .form-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 24px 20px;
+      max-width: 600px;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+    }
+    .form-card h2 {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .form-card .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .tipo-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tipo-option input { display: none; }
+    .tipo-option span {
+      display: block;
+      text-align: center;
+      padding: 12px 10px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .tipo-option input:checked + span.opt-membro {
+      border-color: var(--primary-light);
+      background: #eff6ff;
+      color: var(--primary);
+    }
+    .tipo-option input:checked + span.opt-visitante {
+      border-color: var(--visitor);
+      background: #f5f3ff;
+      color: var(--visitor);
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+    input[type="text"], input[type="tel"], input[type="number"], select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      margin-bottom: 14px;
+      font-size: 1rem;
+      background: #fff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: var(--success);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+      box-shadow: 0 3px 10px rgba(22,163,74,0.25);
+    }
+    .btn-submit:hover { opacity: 0.94; }
+
+    .feedback-msg {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 600;
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    /* Resumo ao Vivo */
+    .section-title {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
       margin-bottom: 24px;
     }
     .stat-card {
       background: var(--card);
-      padding: 20px;
+      padding: 16px 12px;
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      border: 1px solid var(--border);
+      border: 1px solid #e2e8f0;
     }
-    .stat-card span { font-size: 0.9rem; color: var(--muted); display: block; margin-bottom: 8px; font-weight: 600; }
-    .stat-card strong { font-size: 2rem; color: var(--primary); }
+    .stat-card span { font-size: 0.82rem; color: var(--muted); display: block; margin-bottom: 6px; font-weight: 600; }
+    .stat-card strong { font-size: 1.85rem; color: var(--primary); }
+    .stat-card.visitor strong { color: var(--visitor); }
     .stat-card.green strong { color: var(--success); }
     .stat-card.orange strong { color: var(--warning); }
 
-    .main-grid {
+    .panels-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 18px;
     }
     .panel {
       background: var(--card);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      border: 1px solid var(--border);
+      border: 1px solid #e2e8f0;
     }
-    .panel h2 {
-      font-size: 1.15rem;
+    .panel h3 {
+      font-size: 1.08rem;
       color: var(--primary);
-      padding-bottom: 12px;
-      margin-bottom: 16px;
-      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
     }
-    .search-box {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-bottom: 14px;
-      font-size: 0.9rem;
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
     }
-    .item-list { display: flex; flex-direction: column; gap: 10px; max-height: 450px; overflow-y: auto; }
+    .filter-row input, .filter-row select {
+      margin-bottom: 0;
+      padding: 8px 10px;
+      font-size: 0.88rem;
+    }
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
     .item-card {
-      border: 1px solid var(--border);
+      border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 12px;
+      padding: 10px 12px;
       background: #f8fafc;
     }
-    .item-card h3 { font-size: 1rem; color: var(--text); margin-bottom: 4px; }
-    .item-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
+    .item-card h4 { font-size: 0.96rem; margin-bottom: 3px; }
+    .item-card p { font-size: 0.84rem; color: var(--muted); }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
     .badge {
-      display: inline-block;
       padding: 2px 8px;
       border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-top: 6px;
-      background: #dbeafe;
-      color: var(--primary);
+      font-size: 0.74rem;
+      font-weight: 700;
     }
-    .badge.none { background: #fef3c7; color: #92400e; }
-    .empty { text-align: center; color: var(--muted); font-size: 0.9rem; padding: 24px 0; }
+    .badge.membro { background: #dbeafe; color: #1e40af; }
+    .badge.visitante { background: #ede9fe; color: #5b21b6; }
+    .badge.celula { background: #dcfce7; color: #166534; }
+    .badge.sem-celula { background: #fef3c7; color: #92400e; }
+    .empty { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 20px 0; }
 
-    @media (max-width: 640px) {
-      .admin-btn { position: static; display: inline-block; margin-top: 12px; }
+    @media (max-width: 600px) {
+      .admin-btn { position: static; display: inline-block; margin-top: 10px; }
+      .row-2 { grid-template-columns: 1fr; gap: 0; }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Igreja Batista Vida</h1>
-    <p>Acompanhamento de Eventos, Membros e Células</p>
+    <p>Bem-vindo! Faça seu cadastro rápido abaixo</p>
     <div class="status-pill">
       <span class="dot" id="statusDot"></span>
       <span id="statusText">Conectando à nuvem...</span>
@@ -140,148 +267,279 @@
   </header>
 
   <div class="container">
+    <!-- CADASTRO RÁPIDO -->
+    <div class="form-card">
+      <h2>Cadastro Rápido</h2>
+      <p class="subtitle">Preencha seus dados em segundos</p>
+
+      <form id="formCadastroRapido">
+        <div class="tipo-group">
+          <label class="tipo-option">
+            <input type="radio" name="tipoPessoa" value="Membro" checked />
+            <span class="opt-membro">Sou Membro</span>
+          </label>
+          <label class="tipo-option">
+            <input type="radio" name="tipoPessoa" value="Visitante" />
+            <span class="opt-visitante">Sou Visitante</span>
+          </label>
+        </div>
+
+        <label class="field-label" for="cadNome">Nome Completo *</label>
+        <input type="text" id="cadNome" placeholder="Digite seu nome" required />
+
+        <div class="row-2">
+          <div>
+            <label class="field-label" for="cadTel">Telefone / WhatsApp *</label>
+            <input type="tel" id="cadTel" placeholder="(00) 90000-0000" maxlength="15" required />
+          </div>
+          <div>
+            <label class="field-label" for="cadIdade">Idade *</label>
+            <input type="number" id="cadIdade" placeholder="Ex: 28" min="1" max="120" required />
+          </div>
+        </div>
+
+        <label class="field-label" for="cadCelula">Escolha uma Célula (opcional)</label>
+        <select id="cadCelula">
+          <option value="Fora de célula">Ainda não tenho célula / Sem célula</option>
+        </select>
+
+        <button type="submit" class="btn-submit">Confirmar Cadastro</button>
+        <div class="feedback-msg" id="feedbackMsg">Cadastro realizado com sucesso!</div>
+      </form>
+    </div>
+
+    <!-- RESUMO AO VIVO -->
+    <h2 class="section-title">Resumo ao Vivo</h2>
     <div class="stats-grid">
       <div class="stat-card">
-        <span>Total de Membros</span>
+        <span>Total Cadastrados</span>
+        <strong id="totalGeral">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>Membros</span>
         <strong id="totalMembros">0</strong>
+      </div>
+      <div class="stat-card visitor">
+        <span>Visitantes</span>
+        <strong id="totalVisitantes">0</strong>
       </div>
       <div class="stat-card green">
         <span>Em Células</span>
         <strong id="emCelulas">0</strong>
       </div>
       <div class="stat-card orange">
-        <span>Fora das Células</span>
-        <strong id="foraCelulas">0</strong>
-      </div>
-      <div class="stat-card">
-        <span>Total de Células</span>
-        <strong id="totalCelulas">0</strong>
+        <span>Sem Célula</span>
+        <strong id="semCelulas">0</strong>
       </div>
     </div>
 
-    <div class="main-grid">
+    <div class="panels-grid">
+      <!-- PESSOAS -->
       <div class="panel">
-        <h2>Próximos Eventos</h2>
-        <div id="listaEventos" class="item-list"><p class="empty">Carregando...</p></div>
+        <h3>Membros e Visitantes</h3>
+        <div class="filter-row">
+          <input type="text" id="buscaNome" placeholder="Buscar nome..." />
+          <select id="filtroTipo">
+            <option value="Todos">Todos (Membros e Visitantes)</option>
+            <option value="Membro">Somente Membros</option>
+            <option value="Visitante">Somente Visitantes</option>
+            <option value="SemCelula">Sem Célula</option>
+          </select>
+        </div>
+        <div id="listaPessoas" class="item-list"><p class="empty">Carregando...</p></div>
       </div>
 
+      <!-- CÉLULAS -->
       <div class="panel">
-        <h2>Membros</h2>
-        <input type="text" id="buscaMembro" class="search-box" placeholder="Buscar membro por nome ou célula..." />
-        <div id="listaMembros" class="item-list"><p class="empty">Carregando...</p></div>
-      </div>
-
-      <div class="panel">
-        <h2>Células Ativas</h2>
+        <h3>Células e Participantes</h3>
         <div id="listaCelulas" class="item-list"><p class="empty">Carregando...</p></div>
+      </div>
+
+      <!-- EVENTOS -->
+      <div class="panel">
+        <h3>Próximos Eventos</h3>
+        <div id="listaEventos" class="item-list"><p class="empty">Carregando...</p></div>
       </div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     const FIREBASE_DB_URL = "https://igreja-batista-vida-b184c-default-rtdb.firebaseio.com";
-
     const app = initializeApp({ databaseURL: FIREBASE_DB_URL });
     const db = getDatabase(app);
 
-    let eventos = [];
-    let membros = [];
+    let pessoas = [];
     let celulas = [];
+    let eventos = [];
 
+    // Status conexão
     const statusDot = document.getElementById("statusDot");
     const statusText = document.getElementById("statusText");
-
     onValue(ref(db, ".info/connected"), (snap) => {
       if (snap.val() === true) {
         statusDot.classList.remove("offline");
-        statusText.textContent = "Sincronizado ao vivo na nuvem";
+        statusText.textContent = "Ao vivo na nuvem";
       } else {
         statusDot.classList.add("offline");
         statusText.textContent = "Reconectando...";
       }
     });
 
+    // Máscara telefone
+    document.getElementById("cadTel").addEventListener("input", (e) => {
+      let v = e.target.value.replace(/\D/g, "");
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      e.target.value = v;
+    });
+
+    // Enviar Cadastro Rápido
+    document.getElementById("formCadastroRapido").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const tipo = document.querySelector('input[name="tipoPessoa"]:checked').value;
+      const nome = document.getElementById("cadNome").value.trim();
+      const telefone = document.getElementById("cadTel").value.trim();
+      const idade = document.getElementById("cadIdade").value.trim();
+      const celula = document.getElementById("cadCelula").value;
+
+      const novoRef = push(ref(db, "igreja_dados/membros"));
+      await set(novoRef, {
+        tipo,
+        nome,
+        telefone,
+        idade,
+        celula,
+        criadoEm: new Date().toISOString()
+      });
+
+      document.getElementById("formCadastroRapido").reset();
+      const fb = document.getElementById("feedbackMsg");
+      fb.style.display = "block";
+      setTimeout(() => { fb.style.display = "none"; }, 3500);
+    });
+
+    // Escutar dados em tempo real
     onValue(ref(db, "igreja_dados"), (snapshot) => {
       const data = snapshot.val() || {};
-      eventos = data.eventos ? Object.values(data.eventos) : [];
-      membros = data.membros ? Object.values(data.membros) : [];
+      pessoas = data.membros ? Object.values(data.membros) : [];
       celulas = data.celulas ? Object.values(data.celulas) : [];
+      eventos = data.eventos ? Object.values(data.eventos) : [];
       atualizarTela();
     });
 
-    function formatarData(dataStr) {
-      if (!dataStr) return "";
-      const [ano, mes, dia] = dataStr.split("-");
-      return `${dia}/${mes}/${ano}`;
-    }
-
     function atualizarTela() {
-      const emCelulaCount = membros.filter(m => m.celula && m.celula !== "Fora de célula").length;
-      document.getElementById("totalMembros").textContent = membros.length;
-      document.getElementById("emCelulas").textContent = emCelulaCount;
-      document.getElementById("foraCelulas").textContent = membros.length - emCelulaCount;
-      document.getElementById("totalCelulas").textContent = celulas.length;
+      const membrosList = pessoas.filter(p => (p.tipo || "Membro") === "Membro");
+      const visitantesList = pessoas.filter(p => p.tipo === "Visitante");
+      const comCelula = pessoas.filter(p => p.celula && p.celula !== "Fora de célula");
+      const semCelula = pessoas.filter(p => !p.celula || p.celula === "Fora de célula");
 
-      const elEventos = document.getElementById("listaEventos");
-      if (!eventos.length) {
-        elEventos.innerHTML = '<p class="empty">Nenhum evento cadastrado.</p>';
-      } else {
-        const ordenados = [...eventos].sort((a, b) => (a.data || "").localeCompare(b.data || ""));
-        elEventos.innerHTML = ordenados.map(ev => `
-          <div class="item-card">
-            <h3>${ev.nome}</h3>
-            <p>📅 ${formatarData(ev.data)} ${ev.horario ? "• ⏰ " + ev.horario : ""}</p>
-            ${ev.descricao ? `<p>📍 ${ev.descricao}</p>` : ""}
-          </div>
-        `).join("");
+      document.getElementById("totalGeral").textContent = pessoas.length;
+      document.getElementById("totalMembros").textContent = membrosList.length;
+      document.getElementById("totalVisitantes").textContent = visitantesList.length;
+      document.getElementById("emCelulas").textContent = comCelula.length;
+      document.getElementById("semCelulas").textContent = semCelula.length;
+
+      // Atualizar select de células no formulário
+      const selCel = document.getElementById("cadCelula");
+      const selecionadaAntes = selCel.value;
+      selCel.innerHTML = '<option value="Fora de célula">Ainda não tenho célula / Sem célula</option>';
+      celulas.forEach(c => {
+        selCel.innerHTML += `<option value="${c.nome}">${c.nome}${c.lider ? " (Líder: " + c.lider + ")" : ""}</option>`;
+      });
+      if ([...selCel.options].some(o => o.value === selecionadaAntes)) {
+        selCel.value = selecionadaAntes;
       }
 
-      renderizarMembros();
-
-      const elCelulas = document.getElementById("listaCelulas");
-      if (!celulas.length) {
-        elCelulas.innerHTML = '<p class="empty">Nenhuma célula cadastrada.</p>';
-      } else {
-        elCelulas.innerHTML = celulas.map(c => {
-          const qtd = membros.filter(m => m.celula === c.nome).length;
-          return `
-            <div class="item-card">
-              <h3>${c.nome}</h3>
-              <p>Líder: <strong>${c.lider || "Não informado"}</strong></p>
-              <span class="badge">${qtd} ${qtd === 1 ? "membro" : "membros"}</span>
-            </div>
-          `;
-        }).join("");
-      }
+      renderPessoas();
+      renderCelulas();
+      renderEventos();
     }
 
-    function renderizarMembros() {
-      const termo = document.getElementById("buscaMembro").value.toLowerCase();
-      const filtrados = membros.filter(m =>
-        m.nome.toLowerCase().includes(termo) ||
-        (m.celula || "").toLowerCase().includes(termo)
-      );
-      const elMembros = document.getElementById("listaMembros");
-      if (!filtrados.length) {
-        elMembros.innerHTML = '<p class="empty">Nenhum membro encontrado.</p>';
+    function renderPessoas() {
+      const termo = document.getElementById("buscaNome").value.toLowerCase();
+      const filtro = document.getElementById("filtroTipo").value;
+
+      const filtradas = pessoas.filter(p => {
+        const tipoPessoa = p.tipo || "Membro";
+        const semCel = !p.celula || p.celula === "Fora de célula";
+        const matchNome = p.nome.toLowerCase().includes(termo) || (p.celula || "").toLowerCase().includes(termo);
+        if (!matchNome) return false;
+        if (filtro === "Membro") return tipoPessoa === "Membro";
+        if (filtro === "Visitante") return tipoPessoa === "Visitante";
+        if (filtro === "SemCelula") return semCel;
+        return true;
+      });
+
+      const el = document.getElementById("listaPessoas");
+      if (!filtradas.length) {
+        el.innerHTML = '<p class="empty">Nenhuma pessoa encontrada.</p>';
         return;
       }
-      elMembros.innerHTML = filtrados.map(m => {
-        const semCelula = !m.celula || m.celula === "Fora de célula";
+
+      el.innerHTML = [...filtradas].reverse().map(p => {
+        const tipoPessoa = p.tipo || "Membro";
+        const semCel = !p.celula || p.celula === "Fora de célula";
         return `
           <div class="item-card">
-            <h3>${m.nome}</h3>
-            ${m.telefone ? `<p>📱 ${m.telefone}</p>` : ""}
-            <span class="badge ${semCelula ? "none" : ""}">${m.celula || "Fora de célula"}</span>
+            <h4>${p.nome} ${p.idade ? `(${p.idade} anos)` : ""}</h4>
+            ${p.telefone ? `<p>📱 ${p.telefone}</p>` : ""}
+            <div class="badges">
+              <span class="badge ${tipoPessoa === "Visitante" ? "visitante" : "membro"}">${tipoPessoa}</span>
+              <span class="badge ${semCel ? "sem-celula" : "celula"}">${semCel ? "Sem célula" : p.celula}</span>
+            </div>
           </div>
         `;
       }).join("");
     }
 
-    document.getElementById("buscaMembro").addEventListener("input", renderizarMembros);
+    function renderCelulas() {
+      const el = document.getElementById("listaCelulas");
+      if (!celulas.length) {
+        el.innerHTML = '<p class="empty">Nenhuma célula cadastrada ainda.</p>';
+        return;
+      }
+      el.innerHTML = celulas.map(c => {
+        const participantes = pessoas.filter(p => p.celula === c.nome);
+        const nomes = participantes.map(p => p.nome).join(", ");
+        return `
+          <div class="item-card">
+            <h4>${c.nome}</h4>
+            <p>Líder: <strong>${c.lider || "Não informado"}</strong></p>
+            <div class="badges">
+              <span class="badge celula">${participantes.length} ${participantes.length === 1 ? "pessoa" : "pessoas"}</span>
+            </div>
+            ${nomes ? `<p style="margin-top:6px; font-size:0.8rem;">👥 ${nomes}</p>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderEventos() {
+      const el = document.getElementById("listaEventos");
+      if (!eventos.length) {
+        el.innerHTML = '<p class="empty">Nenhum evento cadastrado.</p>';
+        return;
+      }
+      const ordenados = [...eventos].sort((a, b) => (a.data || "").localeCompare(b.data || ""));
+      el.innerHTML = ordenados.map(ev => {
+        const dataBr = ev.data ? ev.data.split("-").reverse().join("/") : "";
+        return `
+          <div class="item-card">
+            <h4>${ev.nome}</h4>
+            <p>📅 ${dataBr} ${ev.horario ? "• ⏰ " + ev.horario : ""}</p>
+            ${ev.descricao ? `<p>📍 ${ev.descricao}</p>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("buscaNome").addEventListener("input", renderPessoas);
+    document.getElementById("filtroTipo").addEventListener("change", renderPessoas);
   </script>
 </body>
 </html>
