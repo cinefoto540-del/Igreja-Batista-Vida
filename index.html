@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Igreja Batista Vida | Painel Principal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #f0f2f5; margin: 0; padding: 0; color: #333; }
+
+  header { background: #1e3a8a; color: white; text-align: center; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); position: relative; }
+  header h1 { margin: 0; }
+  header p { margin: 6px 0 0; opacity: 0.9; font-size: 14px; }
+  .container { max-width: 1140px; margin: 24px auto; padding: 0 18px; }
+
+  .btn-admin-link { position: absolute; top: 20px; right: 20px; background: #10b981; color: white; border: none; padding: 9px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; transition: 0.2s; }
+  .btn-admin-link:hover { background: #059669; }
+
+  .painel { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; margin-bottom: 24px; }
+  .caixa-num { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.08); font-size: 14px; font-weight: 500; }
+  .caixa-num span { display: block; font-size: 32px; font-weight: 700; color: #1e3a8a; margin-top: 8px; }
+
+  .atividade-card { margin-bottom: 24px; }
+  .atividade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .atividade-grid p { margin: 0; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; }
+
+  .colunas { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; align-items: start; }
+  .card { background: white; padding: 22px; border-radius: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); }
+
+  h2 { margin-top: 0; color: #1e3a8a; font-size: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+  .filtros-membros { display: grid; grid-template-columns: 1fr 140px; gap: 8px; margin-bottom: 14px; }
+  input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; }
+  input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+  li:last-child { border-bottom: none; }
+
+  .celula-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 10px; margin-bottom: 12px; }
+  .celula-item ul { margin-top: 8px; padding-left: 18px; list-style: disc; color: #4b5563; }
+  .celula-item li { display: list-item; padding: 3px 0; border-bottom: none; font-size: 14px; }
+
+  .btn-wpp { background: #dcfce7; color: #15803d; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 6px 9px; border-radius: 6px; font-size: 14px; flex-shrink: 0; }
+  .btn-wpp:hover { background: #bbf7d0; }
+
+  .tag { display: inline-block; font-size: 12px; background: #dbeafe; color: #1e40af; padding: 2px 7px; border-radius: 5px; font-weight: 500; margin-left: 4px; }
+  .tag-fora { background: #fef3c7; color: #92400e; }
+  .vazio { color: #9ca3af; font-size: 14px; text-align: center; padding: 15px 0; }
+
+  @media (max-width: 600px) {
+    .btn-admin-link { position: static; display: inline-block; margin-bottom: 14px; }
+    .filtros-membros { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="./admin.html" class="btn-admin-link"><i class="fa-solid fa-lock"></i> Área Admin</a>
+  <h1><i class="fa-solid fa-church"></i> Igreja Batista Vida</h1>
+  <p>Painel de Visualização</p>
+</header>
+
+<div class="container">
+  <div class="painel">
+    <div class="caixa-num">👥 Total de Membros <span id="n-total">0</span></div>
+    <div class="caixa-num">✅ Em Células <span id="n-com">0</span></div>
+    <div class="caixa-num">⚠️ Fora das Células <span id="n-sem" style="color:#d97706">0</span></div>
+    <div class="caixa-num">🤝 Total de Células <span id="n-cel" style="color:#059669">0</span></div>
+  </div>
+
+  <div class="card atividade-card">
+    <h2><i class="fa-solid fa-chart-line"></i> Atividade da Igreja</h2>
+    <div class="atividade-grid">
+      <p>📅 Próximos Eventos: <strong id="qtdEventos">0</strong></p>
+      <p>👥 Em células: <strong id="percCelula">0</strong>% dos membros</p>
+      <p>⚠️ Sem célula: <strong id="percSemCelula">0</strong>% dos membros</p>
+      <p>🤝 Células ativas: <strong id="qtdCelulas">0</strong></p>
+    </div>
+  </div>
+
+  <div class="colunas">
+    <div class="card">
+      <h2><i class="fa-solid fa-calendar"></i> Eventos</h2>
+      <ul id="lista-ev"></ul>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-users"></i> Membros</h2>
+      <div class="filtros-membros">
+        <input type="text" id="buscaMembro" placeholder="🔍 Buscar membro...">
+        <select id="filtroCelula">
+          <option value="TODAS">Todas</option>
+          <option value="SEM">Sem célula</option>
+        </select>
+      </div>
+      <ul id="lista-mb"></ul>
+    </div>
+
+    <div class="card">
+      <h2><i class="fa-solid fa-handshake"></i> Células</h2>
+      <div id="lista-cel"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const db = { eventos: [], membros: [], celulas: [] };
+  try {
+    const salvo = localStorage.getItem('ibv_db');
+    if (salvo) {
+      const parsed = JSON.parse(salvo);
+      if (Array.isArray(parsed.eventos)) db.eventos = parsed.eventos;
+      if (Array.isArray(parsed.membros)) db.membros = parsed.membros;
+      if (Array.isArray(parsed.celulas)) db.celulas = parsed.celulas;
+    }
+  } catch (e) {}
+
+  function escaparTexto(texto) {
+    if (!texto) return '';
+    return String(texto).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function membroTemCelula(m) {
+    return Boolean(m.celulaId && db.celulas.some(c => String(c.id) === String(m.celulaId)));
+  }
+
+  function render() {
+    renderPainelNumeros();
+    renderAtividadeIgreja();
+    renderSelectFiltroCelula();
+    renderListaEventos();
+    renderListaMembros();
+    renderListaCelulas();
+  }
+
+  function renderPainelNumeros() {
+    const total = db.membros.length;
+    const com = db.membros.filter(membroTemCelula).length;
+    document.getElementById('n-total').innerText = total;
+    document.getElementById('n-com').innerText = com;
+    document.getElementById('n-sem').innerText = total - com;
+    document.getElementById('n-cel').innerText = db.celulas.length;
+  }
+
+  function renderAtividadeIgreja() {
+    const total = db.membros.length;
+    const com = db.membros.filter(membroTemCelula).length;
+    const percCom = total > 0 ? Math.round((com / total) * 100) : 0;
+    const percSem = total > 0 ? Math.round(((total - com) / total) * 100) : 0;
+    document.getElementById('qtdEventos').innerText = db.eventos.length;
+    document.getElementById('percCelula').innerText = percCom;
+    document.getElementById('percSemCelula').innerText = percSem;
+    document.getElementById('qtdCelulas').innerText = db.celulas.length;
+  }
+
+  function renderSelectFiltroCelula() {
+    const sel = document.getElementById('filtroCelula');
+    const atual = sel.value;
+    sel.innerHTML = '<option value="TODAS">Todas</option><option value="SEM">Sem célula</option>';
+    [...db.celulas].sort((a, b) => a.nome.localeCompare(b.nome)).forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.nome;
+      sel.appendChild(opt);
+    });
+    sel.value = atual || 'TODAS';
+  }
+
+  function renderListaEventos() {
+    const lEv = document.getElementById('lista-ev');
+    lEv.innerHTML = '';
+    if (db.eventos.length === 0) {
+      lEv.innerHTML = '<div class="vazio">Nenhum evento agendado.</div>';
+      return;
+    }
+    const ordenados = [...db.eventos].sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+    ordenados.forEach(e => {
+      const li = document.createElement('li');
+      const dataFormatada = e.data.split('-').reverse().join('/');
+      const desc = e.desc ? `<br><span style="color:#555">${escaparTexto(e.desc)}</span>` : '';
+      li.innerHTML = `<div><b>${escaparTexto(e.nome)}</b><br><small>📅 ${dataFormatada} às ${escaparTexto(e.hora)}${desc}</small></div>`;
+      lEv.appendChild(li);
+    });
+  }
+
+  function renderListaMembros() {
+    const filtro = document.getElementById('buscaMembro').value.toLowerCase().trim();
+    const filtroCel = document.getElementById('filtroCelula').value;
+    const lMb = document.getElementById('lista-mb');
+    lMb.innerHTML = '';
+
+    const listaFiltrada = db.membros
+      .filter(m => m.nome.toLowerCase().includes(filtro))
+      .filter(m => {
+        if (filtroCel === 'TODAS') return true;
+        if (filtroCel === 'SEM') return !membroTemCelula(m);
+        return String(m.celulaId) === filtroCel;
+      })
+      .sort((a, b) => a.nome.localeCompare(b.nome));
+
+    if (listaFiltrada.length === 0) {
+      lMb.innerHTML = '<div class="vazio">Nenhum membro encontrado.</div>';
+      return;
+    }
+
+    listaFiltrada.forEach(m => {
+      const cel = db.celulas.find(c => String(c.id) === String(m.celulaId));
+      const tag = cel ? `<span class="tag">${escaparTexto(cel.nome)}</span>` : `<span class="tag tag-fora">Fora de célula</span>`;
+      const tel = m.tel ? `<br><small>📞 ${escaparTexto(m.tel)}</small>` : '';
+      const digitosTel = (m.tel || '').replace(/\D/g, '');
+      const btnWpp = digitosTel.length >= 10
+        ? `<a href="https://wa.me/55${digitosTel}" target="_blank" rel="noopener" class="btn-wpp" title="Abrir WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>`
+        : '';
+
+      const li = document.createElement('li');
+      li.innerHTML = `<div><b>${escaparTexto(m.nome)}</b> ${tag}${tel}</div>${btnWpp}`;
+      lMb.appendChild(li);
+    });
+  }
+
+  function renderListaCelulas() {
+    const lCel = document.getElementById('lista-cel');
+    lCel.innerHTML = '';
+    if (db.celulas.length === 0) {
+      lCel.innerHTML = '<div class="vazio">Nenhuma célula cadastrada.</div>';
+      return;
+    }
+
+    [...db.celulas].sort((a, b) => a.nome.localeCompare(b.nome)).forEach(c => {
+      const membrosCel = db.membros
+        .filter(m => String(m.celulaId) === String(c.id))
+        .sort((a, b) => a.nome.localeCompare(b.nome));
+
+      const divItem = document.createElement('div');
+      divItem.className = 'celula-item';
+      let listaHtml = '';
+      membrosCel.forEach(mc => {
+        listaHtml += `<li>${escaparTexto(mc.nome)}</li>`;
+      });
+      const lider = c.lider ? ` | Líder: ${escaparTexto(c.lider)}` : '';
+      divItem.innerHTML = `<b>${escaparTexto(c.nome)} (${membrosCel.length})${lider}</b><ul>${listaHtml || '<li style="list-style:none;color:#888;">Sem membros ainda</li>'}</ul>`;
+      lCel.appendChild(divItem);
+    });
+  }
+
+  document.getElementById('buscaMembro').addEventListener('input', renderListaMembros);
+  document.getElementById('filtroCelula').addEventListener('change', renderListaMembros);
+  render();
+</script>
+</body>
+</html>
