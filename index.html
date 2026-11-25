@@ -42,19 +42,92 @@
     }
     .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
     .dot.offline { background: #facc15; }
-    .admin-btn {
+
+    .top-actions {
       position: absolute;
       top: 18px;
       right: 18px;
+      display: flex;
+      gap: 8px;
+    }
+    .top-btn {
       background: rgba(255,255,255,0.18);
       color: #fff;
       text-decoration: none;
+      border: none;
       padding: 7px 13px;
       border-radius: 8px;
       font-size: 0.82rem;
       font-weight: 600;
+      cursor: pointer;
     }
-    .admin-btn:hover { background: rgba(255,255,255,0.28); }
+    .top-btn:hover { background: rgba(255,255,255,0.28); }
+    .top-btn.qr-highlight {
+      background: #ffffff;
+      color: var(--primary);
+    }
+    .top-btn.qr-highlight:hover { background: #eff6ff; }
+
+    /* Modal do QR Code */
+    .qr-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .qr-modal.open { display: flex; }
+    .qr-box {
+      background: var(--card);
+      color: var(--text);
+      width: 100%;
+      max-width: 390px;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .qr-box h3 { color: var(--primary); font-size: 1.25rem; margin-bottom: 4px; }
+    .qr-box p { color: var(--muted); font-size: 0.88rem; margin-bottom: 16px; }
+    #qrcodeCanvas {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      margin: 0 auto 14px auto;
+      width: fit-content;
+    }
+    .qr-link-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      word-break: break-all;
+      margin-bottom: 14px;
+    }
+    .qr-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .qr-btns button {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .btn-copy-link { background: var(--primary-light); color: #fff; }
+    .btn-close-qr { background: #e2e8f0; color: var(--text); }
 
     .container { max-width: 1100px; margin: 22px auto; padding: 0 16px; }
 
@@ -249,11 +322,12 @@
     .badge.sem-celula { background: #fef3c7; color: #92400e; }
     .empty { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 20px 0; }
 
-    @media (max-width: 600px) {
-      .admin-btn { position: static; display: inline-block; margin-top: 10px; }
+    @media (max-width: 640px) {
+      .top-actions { position: static; justify-content: center; margin-top: 12px; }
       .row-2 { grid-template-columns: 1fr; gap: 0; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
   <header>
@@ -263,8 +337,25 @@
       <span class="dot" id="statusDot"></span>
       <span id="statusText">Conectando à nuvem...</span>
     </div>
-    <a href="admin.html" class="admin-btn">Área Admin</a>
+    <div class="top-actions">
+      <button type="button" id="btnAbrirQr" class="top-btn qr-highlight">QR Code</button>
+      <a href="admin.html" class="top-btn">Área Admin</a>
+    </div>
   </header>
+
+  <!-- Janela do QR Code -->
+  <div class="qr-modal" id="qrModal">
+    <div class="qr-box">
+      <h3>Escaneie para Cadastrar</h3>
+      <p>Aponte a câmera do celular para abrir o cadastro</p>
+      <div id="qrcodeCanvas"></div>
+      <div class="qr-link-text" id="qrLinkTexto"></div>
+      <div class="qr-btns">
+        <button type="button" class="btn-copy-link" id="btnCopiarLink">Copiar Link</button>
+        <button type="button" class="btn-close-qr" id="btnFecharQr">Fechar</button>
+      </div>
+    </div>
+  </div>
 
   <div class="container">
     <!-- CADASTRO RÁPIDO -->
@@ -370,6 +461,49 @@
     const FIREBASE_DB_URL = "https://igreja-batista-vida-b184c-default-rtdb.firebaseio.com";
     const app = initializeApp({ databaseURL: FIREBASE_DB_URL });
     const db = getDatabase(app);
+
+    // QR Code da URL pública sem parâmetros extras
+    const urlCadastro = window.location.origin + window.location.pathname;
+    const qrModal = document.getElementById("qrModal");
+    const qrLinkTexto = document.getElementById("qrLinkTexto");
+    const qrcodeContainer = document.getElementById("qrcodeCanvas");
+    qrLinkTexto.textContent = urlCadastro;
+
+    let qrGerado = false;
+    function garantirQrCode() {
+      if (!qrGerado && typeof QRCode !== "undefined") {
+        new QRCode(qrcodeContainer, {
+          text: urlCadastro,
+          width: 210,
+          height: 210,
+          colorDark: "#1e3a8a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+        qrGerado = true;
+      }
+    }
+
+    document.getElementById("btnAbrirQr").addEventListener("click", () => {
+      garantirQrCode();
+      qrModal.classList.add("open");
+    });
+    document.getElementById("btnFecharQr").addEventListener("click", () => {
+      qrModal.classList.remove("open");
+    });
+    qrModal.addEventListener("click", (e) => {
+      if (e.target === qrModal) qrModal.classList.remove("open");
+    });
+    document.getElementById("btnCopiarLink").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(urlCadastro);
+        const btn = document.getElementById("btnCopiarLink");
+        btn.textContent = "Copiado!";
+        setTimeout(() => { btn.textContent = "Copiar Link"; }, 1800);
+      } catch {
+        alert("Link: " + urlCadastro);
+      }
+    });
 
     let pessoas = [];
     let celulas = [];
